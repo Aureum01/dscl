@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "dscl"
-version = "0.1.0"
+version = "0.1.1"
 description = "Dictionary-Scoped Composition Layer — a model-native linguistic constraint layer for LLM output."
 readme = "README.md"
 license = { file = "LICENSE" }
@@ -20,7 +20,6 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-
 # install with: pip install dscl[nlp]
 # adds linguistically accurate structural checks:
 #   - passive voice detection via dependency parsing
@@ -41,8 +40,9 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/yourusername/DSCL"
-Issues   = "https://github.com/yourusername/DSCL/issues"
+Homepage   = "https://github.com/Aureum01/dscl"
+Repository = "https://github.com/Aureum01/dscl"
+Issues     = "https://github.com/Aureum01/dscl/issues"
 
 # the dscl command line tool
 # after installing, users can run:
