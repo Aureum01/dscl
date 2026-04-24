@@ -1,0 +1,84 @@
+{
+  "_citation": {
+    "sources": [
+      {
+        "name": "Plain Language Act 2010",
+        "url": "https://www.plainlanguage.gov",
+        "note": "Audience-first principle — identify who is reading before writing"
+      },
+      {
+        "name": "NARA 10 Principles of Plain Language",
+        "url": "https://www.archives.gov/open/plain-writing/10-principles.html",
+        "note": "Principle 1: Write for your audience. Establish audience before all else"
+      }
+    ]
+  },
+  "_description": "The first file the pipeline reads after pipeline.json. Defines the three facts the LLM must establish before generating a single word. If any cannot be determined, defaults.json provides the fallback value.",
+  "_pipeline_step": 2,
+  "_rule": "No output is generated until all three entry facts are resolved.",
+  "entry_facts": [
+    {
+      "fact": 1,
+      "name": "narrative",
+      "question": "What is the narrative?",
+      "definition": "The intent and facts the user has provided. This is the input. The pipeline does not invent, add to, or modify the narrative. It only controls how the narrative is expressed in language.",
+      "resolution": "Extract from user input directly",
+      "if_missing": "Ask the user to clarify their intent before proceeding",
+      "what_pipeline_does_with_it": "Uses narrative as the sole source of meaning. All vocabulary, sentence, and paragraph decisions serve the narrative — they do not shape it."
+    },
+    {
+      "fact": 2,
+      "name": "domain",
+      "question": "What is the domain?",
+      "definition": "The category of output being produced. Unlocks domain_register.json to set FK target and register ceiling.",
+      "resolution": "Detect from narrative content and context signals",
+      "detection_signals": [
+        "keywords indicating travel, risk, security → travel_risk",
+        "keywords indicating medical, patient, health, diagnosis → medical_patient",
+        "keywords indicating contract, liability, clause, legal → legal_contract",
+        "keywords indicating article, report, news, press → news_journalism",
+        "keywords indicating research, study, methodology, hypothesis → academic_research",
+        "keywords indicating emergency, evacuation, alert, urgent → crisis_operational",
+        "keywords indicating technical, specification, system, engineering → technical_specialist",
+        "keywords indicating report, assessment, briefing, summary → professional_report"
+      ],
+      "if_missing": "Use default domain: general_default",
+      "what_pipeline_does_with_it": "Passes domain to domain_register.json at step 3 to retrieve FK target and register ceiling"
+    },
+    {
+      "fact": 3,
+      "name": "audience",
+      "question": "What is the audience?",
+      "definition": "Who will read the output. Sets the FK target ceiling and informs register ceiling selection.",
+      "resolution": "Infer from domain or detect from explicit user instruction",
+      "audience_types": [
+        {
+          "type": "general_public",
+          "fk_ceiling": 8,
+          "description": "Mixed reading levels. No domain knowledge assumed. Default for most output."
+        },
+        {
+          "type": "professional",
+          "fk_ceiling": 10,
+          "description": "Domain-adjacent readers. Some technical vocabulary permitted."
+        },
+        {
+          "type": "specialist",
+          "fk_ceiling": 16,
+          "description": "Expert readers. Full technical register permitted where domain tag matches."
+        }
+      ],
+      "if_missing": "Use default audience: general_public",
+      "what_pipeline_does_with_it": "Confirms or adjusts the FK target set by domain_register.json"
+    }
+  ],
+  "resolution_order": [
+    "1. Read user input",
+    "2. Extract narrative — what is being said",
+    "3. Detect domain — what kind of document is this",
+    "4. Infer audience — who is reading it",
+    "5. If any fact is missing, apply defaults.json fallback",
+    "6. Pass all three facts to pipeline step 3 (domain_register.json)"
+  ],
+  "hard_rule": "The pipeline does not generate a single word until all three facts are resolved or defaulted."
+}

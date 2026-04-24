@@ -1,0 +1,193 @@
+{
+  "_citation": {
+    "sources": [
+      {
+        "name": "COCA Genre Frequency Comparison",
+        "url": "https://www.wordfrequency.info",
+        "note": "Spoken vs academic register frequency profiles used to establish load boundaries"
+      },
+      {
+        "name": "TV Corpus — 325M words, 75,000 episodes",
+        "url": "https://www.english-corpora.org/tv",
+        "note": "Informal register baseline — concrete and abstract_general word frequency"
+      },
+      {
+        "name": "Corpus of American Soaps — 100M words",
+        "url": "https://www.english-corpora.org/soap",
+        "note": "Very informal register baseline — sets floor for concrete word classification"
+      },
+      {
+        "name": "WordNet — Cognitive Register and Synset Depth",
+        "url": "https://wordnet.princeton.edu",
+        "note": "Synset depth used to estimate cognitive load by abstraction level"
+      }
+    ]
+  },
+  "_description": "Tags every word class by cognitive load. Four register levels from concrete to ai_signature. The pipeline reads this file at step 4 after domain detection to assign a register ceiling. No word above the ceiling may appear in output unless domain_exceptions.json permits it.",
+  "_pipeline_step": 4,
+  "_rules": {
+    "ceiling_is_hard": true,
+    "ai_signature_words_are_always_blocked": true,
+    "concrete_words_always_permitted": true,
+    "abstract_technical_requires_domain_match": true,
+    "if_word_untagged": "treat as abstract_general"
+  },
+  "registers": [
+    {
+      "register": "concrete",
+      "load": "low",
+      "description": "Physical, observable, directly sensory. No domain knowledge required. A reader at any level understands these words immediately.",
+      "permitted_in_all_domains": true,
+      "examples": [
+        "door", "fall", "run", "break", "fire", "water", "road", "car",
+        "house", "hand", "eye", "hit", "cut", "stop", "move", "give",
+        "take", "open", "close", "safe", "dead", "hot", "cold", "fast",
+        "slow", "loud", "dark", "full", "empty", "high", "low"
+      ],
+      "characteristics": {
+        "syllables": "1-2 preferred",
+        "coca_rank_typical": "1-2000",
+        "tv_corpus_frequency": "high",
+        "academic_corpus_frequency": "medium-low"
+      }
+    },
+    {
+      "register": "abstract_general",
+      "load": "medium",
+      "description": "Common concepts understood by most adults without specialist training. Present in everyday speech and general writing. The default ceiling for most output domains.",
+      "permitted_in_domains": [
+        "general_default",
+        "travel_risk",
+        "medical_patient",
+        "news_journalism",
+        "crisis_operational"
+      ],
+      "examples": [
+        "risk", "plan", "cost", "threat", "decision", "access", "control",
+        "support", "policy", "process", "system", "issue", "report",
+        "change", "effect", "result", "reason", "purpose", "value",
+        "concern", "action", "impact", "level", "position", "structure"
+      ],
+      "characteristics": {
+        "syllables": "1-3",
+        "coca_rank_typical": "1-5000",
+        "tv_corpus_frequency": "medium",
+        "academic_corpus_frequency": "medium"
+      }
+    },
+    {
+      "register": "abstract_technical",
+      "load": "high",
+      "description": "Domain knowledge required to decode meaning. A general reader cannot reliably interpret these words without context or training. Permitted only when domain tag matches.",
+      "permitted_in_domains": [
+        "legal_contract",
+        "academic_research",
+        "professional_report",
+        "technical_specialist"
+      ],
+      "requires_domain_match": true,
+      "examples": [
+        "asymmetric", "endemic", "liability", "escalation", "mitigation",
+        "indemnify", "jurisdiction", "pathogen", "latency", "derivative",
+        "arbitrage", "taxonomy", "epistemology", "kinetics", "algorithm",
+        "heuristic", "variance", "attribution", "disposition", "proliferation"
+      ],
+      "characteristics": {
+        "syllables": "3-6 typical",
+        "coca_rank_typical": "5000-20000",
+        "tv_corpus_frequency": "low",
+        "academic_corpus_frequency": "high"
+      }
+    },
+    {
+      "register": "ai_signature",
+      "load": "negative",
+      "description": "Words that appear at anomalously high rates in LLM output relative to human writing corpora. They add no meaning, signal model-generated text, and reduce trust. Always blocked regardless of domain.",
+      "always_blocked": true,
+      "permitted_in_domains": [],
+      "action": "delete or replace — no exceptions",
+      "words": [
+        {
+          "word": "robust",
+          "replace_with": "strong",
+          "note": "Overused in LLM output. Carries no meaning beyond 'strong' or 'reliable'."
+        },
+        {
+          "word": "delve",
+          "replace_with": "look at / explore / examine",
+          "note": "Rare in human writing. Anomalously frequent in LLM output."
+        },
+        {
+          "word": "nuanced",
+          "replace_with": "detailed / specific / careful",
+          "note": "Used as filler. If nuance exists, describe it — do not label it."
+        },
+        {
+          "word": "leverage",
+          "replace_with": "use",
+          "note": "Business jargon with no added meaning over 'use'."
+        },
+        {
+          "word": "comprehensive",
+          "replace_with": "full / complete / detailed",
+          "note": "Inflated modifier. Replace with the specific claim it makes."
+        },
+        {
+          "word": "holistic",
+          "replace_with": "full / complete / whole",
+          "note": "No precise meaning. Replace with what is actually included."
+        },
+        {
+          "word": "it is important to note",
+          "replace_with": "delete",
+          "note": "Filler phrase. If the point matters, state it directly."
+        },
+        {
+          "word": "stakeholders",
+          "replace_with": "name them",
+          "note": "Vague. Name the actual group: staff, residents, contractors, patients."
+        },
+        {
+          "word": "facilitate",
+          "replace_with": "help / enable / allow",
+          "note": "Nominalization trap. Replace with the direct verb."
+        },
+        {
+          "word": "utilize",
+          "replace_with": "use",
+          "note": "No meaning beyond 'use'. Always replace."
+        },
+        {
+          "word": "demonstrate",
+          "replace_with": "show",
+          "note": "Overused in LLM output where 'show' is sufficient."
+        },
+        {
+          "word": "furthermore",
+          "replace_with": "delete or rewrite",
+          "note": "Transitional filler. If the point follows logically, no connector is needed."
+        },
+        {
+          "word": "in conclusion",
+          "replace_with": "delete",
+          "note": "The conclusion is the last paragraph. Label not needed."
+        },
+        {
+          "word": "overall",
+          "replace_with": "delete or be specific",
+          "note": "Vague summary word. State the specific claim instead."
+        },
+        {
+          "word": "accordingly",
+          "replace_with": "so / therefore",
+          "note": "Formal filler. Replace with the shorter connector or rewrite."
+        }
+      ],
+      "characteristics": {
+        "coca_frequency": "low in human corpora",
+        "llm_frequency": "anomalously high",
+        "value_added": "none"
+      }
+    }
+  ]
+}

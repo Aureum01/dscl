@@ -1,0 +1,275 @@
+{
+  "_citation": {
+    "sources": [
+      {
+        "name": "Strunk & White, Elements of Style — Rule 13: Omit Needless Words",
+        "url": "https://www.gutenberg.org/ebooks/37134",
+        "note": "Public domain. Verb-to-noun constructions inflate sentence length and distance the actor from the action. Every word must tell."
+      },
+      {
+        "name": "Strunk & White, Elements of Style — Rule 10: Use the Active Voice",
+        "url": "https://www.gutenberg.org/ebooks/37134",
+        "note": "The verb carries the action. When action is buried in a noun, the verb becomes a placeholder."
+      },
+      {
+        "name": "Purdue OWL — Active Verb Tenses",
+        "url": "https://owl.purdue.edu/owl/general_writing/grammar/active_verb_tenses.html",
+        "note": "Active constructions keep actors and actions visible."
+      },
+      {
+        "name": "Williams, J. — Style: Lessons in Clarity and Grace",
+        "url": null,
+        "note": "Nominalization chapter — verb-to-noun constructions as primary source of inflated, unclear prose."
+      }
+    ]
+  },
+  "_description": "Verb-to-noun constructions (nominalizations) that inflate sentence length and hide the actor. Each entry gives the nominalized form, its direct verb replacement, and the rule ID. Replace without exception unless domain_exceptions.json permits the term.",
+  "_pipeline_step": 8,
+  "_pipeline_substep": 4,
+  "_rule": "When a nominalized form is found in output, replace it with the direct verb form. No exceptions unless domain tag is active and domain_exceptions.json explicitly permits the term.",
+  "blocklist": [
+    {
+      "rule_id": "NB_01",
+      "nominalization": "make a decision",
+      "replacement": "decide",
+      "weight": "hard",
+      "example_before": "The committee will make a decision by Friday.",
+      "example_after": "The committee will decide by Friday."
+    },
+    {
+      "rule_id": "NB_02",
+      "nominalization": "provide assistance",
+      "replacement": "help",
+      "weight": "hard",
+      "example_before": "The agency will provide assistance to affected residents.",
+      "example_after": "The agency will help affected residents."
+    },
+    {
+      "rule_id": "NB_03",
+      "nominalization": "conduct an analysis",
+      "replacement": "analyze",
+      "weight": "hard",
+      "example_before": "The team will conduct an analysis of the data.",
+      "example_after": "The team will analyze the data."
+    },
+    {
+      "rule_id": "NB_04",
+      "nominalization": "reach a conclusion",
+      "replacement": "conclude",
+      "weight": "hard",
+      "example_before": "Investigators reached the conclusion that the cause was structural.",
+      "example_after": "Investigators concluded the cause was structural."
+    },
+    {
+      "rule_id": "NB_05",
+      "nominalization": "have an impact on",
+      "replacement": "affect",
+      "weight": "hard",
+      "example_before": "The decision will have an impact on all residents.",
+      "example_after": "The decision will affect all residents."
+    },
+    {
+      "rule_id": "NB_06",
+      "nominalization": "give consideration to",
+      "replacement": "consider",
+      "weight": "hard",
+      "example_before": "The board should give consideration to the proposal.",
+      "example_after": "The board should consider the proposal."
+    },
+    {
+      "rule_id": "NB_07",
+      "nominalization": "make an assessment of",
+      "replacement": "assess",
+      "weight": "hard",
+      "example_before": "Staff will make an assessment of the damage.",
+      "example_after": "Staff will assess the damage."
+    },
+    {
+      "rule_id": "NB_08",
+      "nominalization": "with respect to",
+      "replacement": "on / about / for",
+      "weight": "hard",
+      "example_before": "Guidance with respect to safety protocols has changed.",
+      "example_after": "Guidance on safety protocols has changed."
+    },
+    {
+      "rule_id": "NB_09",
+      "nominalization": "provide a recommendation",
+      "replacement": "recommend",
+      "weight": "hard",
+      "example_before": "The panel will provide a recommendation next week.",
+      "example_after": "The panel will recommend next week."
+    },
+    {
+      "rule_id": "NB_10",
+      "nominalization": "carry out an investigation",
+      "replacement": "investigate",
+      "weight": "hard",
+      "example_before": "Police will carry out an investigation into the incident.",
+      "example_after": "Police will investigate the incident."
+    },
+    {
+      "rule_id": "NB_11",
+      "nominalization": "make an attempt",
+      "replacement": "try / attempt",
+      "weight": "hard",
+      "example_before": "The team made an attempt to reach the survivors.",
+      "example_after": "The team tried to reach the survivors."
+    },
+    {
+      "rule_id": "NB_12",
+      "nominalization": "take action",
+      "replacement": "act",
+      "weight": "hard",
+      "example_before": "Leadership must take action immediately.",
+      "example_after": "Leadership must act immediately."
+    },
+    {
+      "rule_id": "NB_13",
+      "nominalization": "provide support",
+      "replacement": "support",
+      "weight": "hard",
+      "example_before": "The agency will provide support to the affected population.",
+      "example_after": "The agency will support the affected population."
+    },
+    {
+      "rule_id": "NB_14",
+      "nominalization": "give approval",
+      "replacement": "approve",
+      "weight": "hard",
+      "example_before": "The minister gave approval for the operation.",
+      "example_after": "The minister approved the operation."
+    },
+    {
+      "rule_id": "NB_15",
+      "nominalization": "make a payment",
+      "replacement": "pay",
+      "weight": "hard",
+      "example_before": "Contractors must make a payment by the deadline.",
+      "example_after": "Contractors must pay by the deadline."
+    },
+    {
+      "rule_id": "NB_16",
+      "nominalization": "perform a review",
+      "replacement": "review",
+      "weight": "hard",
+      "example_before": "The auditor will perform a review of the accounts.",
+      "example_after": "The auditor will review the accounts."
+    },
+    {
+      "rule_id": "NB_17",
+      "nominalization": "have an effect on",
+      "replacement": "affect",
+      "weight": "hard",
+      "example_before": "This change will have an effect on all contracts.",
+      "example_after": "This change will affect all contracts."
+    },
+    {
+      "rule_id": "NB_18",
+      "nominalization": "reach an agreement",
+      "replacement": "agree",
+      "weight": "hard",
+      "example_before": "Both parties reached an agreement on the terms.",
+      "example_after": "Both parties agreed on the terms."
+    },
+    {
+      "rule_id": "NB_19",
+      "nominalization": "make a request",
+      "replacement": "request / ask",
+      "weight": "hard",
+      "example_before": "The delegate made a request for more time.",
+      "example_after": "The delegate asked for more time."
+    },
+    {
+      "rule_id": "NB_20",
+      "nominalization": "provide notification",
+      "replacement": "notify",
+      "weight": "hard",
+      "example_before": "The department will provide notification to all staff.",
+      "example_after": "The department will notify all staff."
+    },
+    {
+      "rule_id": "NB_21",
+      "nominalization": "make a contribution",
+      "replacement": "contribute",
+      "weight": "hard",
+      "example_before": "Each team member made a contribution to the report.",
+      "example_after": "Each team member contributed to the report."
+    },
+    {
+      "rule_id": "NB_22",
+      "nominalization": "undertake a study",
+      "replacement": "study",
+      "weight": "hard",
+      "example_before": "The institute will undertake a study of the region.",
+      "example_after": "The institute will study the region."
+    },
+    {
+      "rule_id": "NB_23",
+      "nominalization": "give an explanation",
+      "replacement": "explain",
+      "weight": "hard",
+      "example_before": "The spokesperson gave an explanation of the delay.",
+      "example_after": "The spokesperson explained the delay."
+    },
+    {
+      "rule_id": "NB_24",
+      "nominalization": "make use of",
+      "replacement": "use",
+      "weight": "hard",
+      "example_before": "Teams should make use of available resources.",
+      "example_after": "Teams should use available resources."
+    },
+    {
+      "rule_id": "NB_25",
+      "nominalization": "be in receipt of",
+      "replacement": "receive",
+      "weight": "hard",
+      "example_before": "The office is in receipt of the documents.",
+      "example_after": "The office received the documents."
+    },
+    {
+      "rule_id": "NB_26",
+      "nominalization": "it is important to note that",
+      "replacement": "delete — state the point directly",
+      "weight": "hard",
+      "example_before": "It is important to note that the deadline has passed.",
+      "example_after": "The deadline has passed.",
+      "note": "This phrase delays the point without adding emphasis. Delete it and state the point."
+    },
+    {
+      "rule_id": "NB_27",
+      "nominalization": "in order to",
+      "replacement": "to",
+      "weight": "soft",
+      "example_before": "Staff must sign in order to access the system.",
+      "example_after": "Staff must sign to access the system."
+    },
+    {
+      "rule_id": "NB_28",
+      "nominalization": "due to the fact that",
+      "replacement": "because",
+      "weight": "hard",
+      "example_before": "The flight was cancelled due to the fact that weather conditions were poor.",
+      "example_after": "The flight was cancelled because weather conditions were poor.",
+      "source": "Strunk & White Rule 13 — owing to the fact that → since / because"
+    },
+    {
+      "rule_id": "NB_29",
+      "nominalization": "in spite of the fact that",
+      "replacement": "although / though",
+      "weight": "hard",
+      "example_before": "In spite of the fact that the report was late, work continued.",
+      "example_after": "Although the report was late, work continued.",
+      "source": "Strunk & White Rule 13"
+    },
+    {
+      "rule_id": "NB_30",
+      "nominalization": "the utilization of",
+      "replacement": "using / use of",
+      "weight": "hard",
+      "example_before": "The utilization of available tools is required.",
+      "example_after": "Using available tools is required."
+    }
+  ]
+}

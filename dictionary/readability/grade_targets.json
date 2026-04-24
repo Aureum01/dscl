@@ -1,0 +1,128 @@
+{
+  "_citation": {
+    "sources": [
+      {
+        "name": "Flesch-Kincaid Grade Level Formula",
+        "url": "https://readable.com/readability/flesch-reading-ease-flesch-kincaid-grade-level",
+        "note": "FK grade level corresponds to US education grade. Sentence length is primary driver. Syllables per word is secondary driver. Formula is public domain."
+      },
+      {
+        "name": "Plain Language Act 2010",
+        "url": "https://www.plainlanguage.gov",
+        "note": "FK 6-8 established as the plain language standard for general public documents. Government documents must be written for the audience that will read them."
+      },
+      {
+        "name": "U.S. Navy FK Standard 1975",
+        "url": "https://www.naturalwrite.com/flesch-kincaid",
+        "note": "FK formula developed with U.S. Navy for technical training manuals. Original application was military documentation — precision under cognitive load."
+      },
+      {
+        "name": "Medicare/Medicaid Plain Language Compliance",
+        "url": "https://www.langsolinc.com",
+        "note": "Grade 5-7 standard for patient-facing medical documents. Patients under stress cannot process high FK content."
+      }
+    ]
+  },
+  "_description": "FK grade level targets by output type. These are composition constraints — not scoring tools applied after the fact. The LLM must compose within the target from the first word. Sentence length is the primary lever. Word complexity (syllable count) is the secondary lever.",
+  "_pipeline_step": 7,
+  "_critical_rule": "FK grade is a composition constraint. The LLM does not write first and score second. It composes within the target throughout generation. If output exceeds the FK ceiling, reduce sentence length before changing word choice.",
+  "formula": {
+    "name": "Flesch-Kincaid Grade Level",
+    "expression": "FK = 0.39 × (words/sentences) + 11.8 × (syllables/words) − 15.59",
+    "primary_driver": "average sentence length — words per sentence",
+    "secondary_driver": "average word complexity — syllables per word",
+    "note": "Sentence length has a larger coefficient (0.39) than syllable load (11.8 × syllables/words is larger in absolute terms but syllables/words rarely exceeds 2.0 in plain language). Reducing sentence length is always the first correction when FK is too high.",
+    "source": "Public domain — Kincaid, J.P., Fishburne, R.P., Rogers, R.L., & Chissom, B.S. (1975)"
+  },
+  "targets": [
+    {
+      "output_type": "crisis_operational",
+      "fk_target": "5-7",
+      "fk_floor": 5,
+      "fk_ceiling": 7,
+      "reading_level": "Elementary to Middle School",
+      "age_range": "10-13",
+      "rationale": "A reader under stress, in danger, or managing an emergency cannot process complex prose. Every sentence must be immediately actionable. Short sentences, concrete words, no subordinate clauses unless essential.",
+      "sentence_length_target": "10-15 words average",
+      "paragraph_length": "2-3 sentences",
+      "weight": "hard",
+      "domains": ["crisis_operational"]
+    },
+    {
+      "output_type": "medical_patient",
+      "fk_target": "5-7",
+      "fk_floor": 5,
+      "fk_ceiling": 7,
+      "reading_level": "Elementary to Middle School",
+      "age_range": "10-13",
+      "rationale": "Medicare/Medicaid standard. Patients under stress, in pain, or managing a health crisis process at lower cognitive loads than their normal reading level. Plain language is a compliance requirement, not a style preference.",
+      "sentence_length_target": "10-15 words average",
+      "paragraph_length": "2-3 sentences",
+      "weight": "hard",
+      "domains": ["medical_patient"],
+      "compliance_note": "Medicare/Medicaid plain language compliance requires grade 5-7 for all patient-facing documents."
+    },
+    {
+      "output_type": "general_output",
+      "fk_target": "6-8",
+      "fk_floor": 6,
+      "fk_ceiling": 8,
+      "reading_level": "Middle School",
+      "age_range": "11-14",
+      "rationale": "Plain Language Act 2010 standard for general public documents. FK 6-8 reaches the widest possible audience without sacrificing precision. Default for any domain where a more specific target is not set.",
+      "sentence_length_target": "15-20 words average",
+      "paragraph_length": "3-6 sentences",
+      "weight": "soft",
+      "domains": ["general_default", "travel_risk", "news_journalism"]
+    },
+    {
+      "output_type": "professional_report",
+      "fk_target": "8-10",
+      "fk_floor": 8,
+      "fk_ceiling": 10,
+      "reading_level": "High School",
+      "age_range": "13-16",
+      "rationale": "Professional audience with domain-adjacent knowledge. Some technical vocabulary permitted. Plain summaries must lead each section for mixed audiences.",
+      "sentence_length_target": "15-22 words average",
+      "paragraph_length": "3-6 sentences",
+      "weight": "soft",
+      "domains": ["professional_report", "legal_contract"]
+    },
+    {
+      "output_type": "technical_specialist",
+      "fk_target": "10-12",
+      "fk_floor": 10,
+      "fk_ceiling": 12,
+      "reading_level": "High School to College",
+      "age_range": "15-18",
+      "rationale": "Specialist reader with domain knowledge. Technical vocabulary permitted where domain tag matches. Precision takes priority over simplicity when the two conflict.",
+      "sentence_length_target": "18-25 words average",
+      "paragraph_length": "3-6 sentences",
+      "weight": "soft",
+      "domains": ["technical_specialist"]
+    },
+    {
+      "output_type": "academic",
+      "fk_target": "12-16",
+      "fk_floor": 12,
+      "fk_ceiling": 16,
+      "reading_level": "College to Post-graduate",
+      "age_range": "17-22+",
+      "rationale": "Expert reader. Full technical register permitted where domain tag matches. Passive voice permitted when it is the academic convention rather than an exception. Complex sentence structures are acceptable when they carry precise meaning.",
+      "sentence_length_target": "20-30 words average",
+      "paragraph_length": "4-8 sentences",
+      "weight": "soft",
+      "domains": ["academic_research"]
+    }
+  ],
+  "correction_order": {
+    "description": "When FK grade exceeds the ceiling, apply corrections in this order",
+    "steps": [
+      "1. Reduce average sentence length — split long sentences before changing words",
+      "2. Replace 3+ syllable words with 1-2 syllable equivalents where meaning is preserved",
+      "3. Remove nominalizations — replace with direct verbs (see nominalization_blocklist.json)",
+      "4. Remove intensifiers and filler adjectives (see modifier_rules.json)",
+      "5. If FK is still above ceiling after all corrections, check domain — target may need to be raised"
+    ]
+  }
+}

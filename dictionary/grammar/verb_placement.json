@@ -1,0 +1,101 @@
+{
+  "_citation": {
+    "sources": [
+      {
+        "name": "Strunk & White, Elements of Style — Rule 16: Keep Related Words Together",
+        "url": "https://www.gutenberg.org/ebooks/37134",
+        "note": "Public domain. Subject and principal verb should not be separated by a phrase or clause that can be transferred elsewhere."
+      },
+      {
+        "name": "Strunk & White, Elements of Style — Rule 10: Use the Active Voice",
+        "url": "https://www.gutenberg.org/ebooks/37134",
+        "note": "Strong transitive verbs over forms of to be. Verb carries the action."
+      },
+      {
+        "name": "Purdue OWL — Making Subjects and Verbs Agree",
+        "url": "https://owl.purdue.edu/owl/general_writing/grammar/subject_verb_agreement.html",
+        "note": "Subject-verb proximity and agreement as clarity foundation."
+      }
+    ]
+  },
+  "_description": "The verb must follow the subject closely. Strong transitive verbs are preferred over forms of to be. The verb carries the action — it is not a placeholder or filler.",
+  "_pipeline_step": 8,
+  "_pipeline_substep": 2,
+  "rules": [
+    {
+      "rule_id": "VP_01",
+      "rule": "The verb must follow the subject within 5 words.",
+      "weight": "hard",
+      "rationale": "Subject-verb proximity is the primary driver of sentence clarity. When more than 5 words separate subject from verb, the reader loses the thread of the sentence.",
+      "example_correct": "The guard closed the gate at midnight.",
+      "example_incorrect": "The guard, after receiving orders from the shift supervisor late in the evening, closed the gate.",
+      "violation_type": "subject_verb_separation",
+      "word_limit_between": 5,
+      "source": "Strunk & White Rule 16"
+    },
+    {
+      "rule_id": "VP_02",
+      "rule": "Do not separate subject and verb with a long intervening clause.",
+      "weight": "hard",
+      "rationale": "An intervening clause between subject and verb forces the reader to hold the subject in memory while processing unrelated information. Move the clause to the beginning or end of the sentence.",
+      "example_correct": "After receiving orders from the supervisor, the guard closed the gate.",
+      "example_incorrect": "The guard, after receiving orders from the supervisor, closed the gate at midnight without incident.",
+      "fix": "Move the intervening clause to the front or rear of the sentence.",
+      "violation_type": "intervening_clause",
+      "source": "Strunk & White Rule 16"
+    },
+    {
+      "rule_id": "VP_03",
+      "rule": "Prefer strong transitive verbs over forms of to be.",
+      "weight": "soft",
+      "rationale": "Forms of to be — is, are, was, were, been, being — are placeholders. They carry no action. Replace with a verb that describes what the subject actually does.",
+      "example_correct": "The flood destroyed three bridges.",
+      "example_incorrect": "Three bridges were affected by the flood.",
+      "to_be_forms_to_replace": ["is", "are", "was", "were", "been", "being", "am"],
+      "violation_type": "weak_to_be_verb",
+      "source": "Strunk & White Rule 10"
+    },
+    {
+      "rule_id": "VP_04",
+      "rule": "The verb carries the action — it is not a placeholder for a nominalization.",
+      "weight": "hard",
+      "rationale": "When the real action is buried in a noun — decision, analysis, consideration — the verb becomes meaningless filler. The action belongs in the verb.",
+      "example_correct": "The team decided quickly.",
+      "example_incorrect": "The team made a quick decision.",
+      "note": "See nominalization_blocklist.json for full list of verb-noun constructions to replace.",
+      "violation_type": "verb_as_placeholder",
+      "source": "Strunk & White Rule 10 and Rule 13"
+    },
+    {
+      "rule_id": "VP_05",
+      "rule": "Do not bury the main verb after a long introductory phrase.",
+      "weight": "soft",
+      "rationale": "When the verb arrives late in the sentence, the reader must hold incomplete meaning while waiting for it. Lead with subject and verb, then add context.",
+      "example_correct": "The pipeline failed at 3am, triggering an automatic shutdown.",
+      "example_incorrect": "At 3am on Tuesday, following a pressure spike detected by the monitoring system, the pipeline failed.",
+      "fix": "Restructure so subject and verb appear in the first half of the sentence.",
+      "violation_type": "late_verb",
+      "source": "Strunk & White Rule 16"
+    },
+    {
+      "rule_id": "VP_06",
+      "rule": "Avoid split constructions that place modifiers between auxiliary and main verb unnecessarily.",
+      "weight": "soft",
+      "rationale": "Modifiers between auxiliary and main verb slow the reader without adding clarity.",
+      "example_correct": "The team had already reviewed the report.",
+      "example_incorrect": "The team had, in the course of the previous afternoon, reviewed the report.",
+      "violation_type": "split_verb_construction",
+      "source": "Strunk & White Rule 16"
+    }
+  ],
+  "preferred_verb_types": {
+    "description": "In order of preference for DSCL output",
+    "order": [
+      "1. Strong transitive verbs — subject acts on object directly (destroy, close, send, block, confirm)",
+      "2. Strong intransitive verbs — subject acts without object (fall, stop, fail, collapse, move)",
+      "3. Linking verbs with specific predicates — subject is described precisely (the road remains closed)",
+      "4. Auxiliary + main verb — compound tenses used only when tense requires it",
+      "5. Forms of to be — last resort, only when no action verb is possible"
+    ]
+  }
+}

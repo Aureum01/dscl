@@ -1,0 +1,54 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "dscl"
+version = "0.1.0"
+description = "Dictionary-Scoped Composition Layer — a model-native linguistic constraint layer for LLM output."
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.10"
+
+# core dependencies — always installed with pip install dscl
+# kept intentionally small so the library stays lightweight
+dependencies = [
+    # fast word and phrase scanning using a Trie structure.
+    # replaces per-rule regex with a single pass over the output.
+    # the more rules DSCL gains over time, the bigger the speed advantage.
+    "flashtext>=2.7",
+]
+
+[project.optional-dependencies]
+
+# install with: pip install dscl[nlp]
+# adds linguistically accurate structural checks:
+#   - passive voice detection via dependency parsing
+#   - nominalization detection via morphological analysis
+#   - more accurate syllable counting for FK grade
+# after installing, run: dscl setup-nlp
+# to download the english language model spaCy needs
+nlp = [
+    "spacy>=3.7",
+]
+
+# install with: pip install dscl[dev]
+# tools needed to run tests and contribute to the library
+dev = [
+    "pytest>=7.0",
+    "pytest-cov",
+    "hatch",
+]
+
+[project.urls]
+Homepage = "https://github.com/yourusername/DSCL"
+Issues   = "https://github.com/yourusername/DSCL/issues"
+
+# the dscl command line tool
+# after installing, users can run:
+#   dscl setup-nlp     — downloads the spaCy language model
+[project.scripts]
+dscl = "dscl.cli:run"
+
+[tool.hatch.build.targets.wheel]
+packages = ["dscl"]

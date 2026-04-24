@@ -1,0 +1,130 @@
+{
+  "_citation": {
+    "sources": [
+      {
+        "name": "Strunk & White, Elements of Style — Rule 14: Avoid a Succession of Loose Sentences",
+        "url": "https://www.gutenberg.org/ebooks/37134",
+        "note": "Public domain. Sentence variety required. Short must follow long."
+      },
+      {
+        "name": "Strunk & White, Elements of Style — Rule 16: Keep Related Words Together",
+        "url": "https://www.gutenberg.org/ebooks/37134",
+        "note": "Subject and principal verb should not be separated. Main point in main clause."
+      },
+      {
+        "name": "Strunk & White, Elements of Style — Rule 18: Place the Emphatic Words at the End",
+        "url": "https://www.gutenberg.org/ebooks/37134",
+        "note": "The proper place for what is most prominent is the end of the sentence."
+      },
+      {
+        "name": "Purdue OWL — Making Subjects and Verbs Agree",
+        "url": "https://owl.purdue.edu/owl/general_writing/grammar/subject_verb_agreement.html",
+        "note": "Subject leads. Verb follows. Core sentence structure principle."
+      },
+      {
+        "name": "Plain Language Act 2010",
+        "url": "https://www.plainlanguage.gov",
+        "note": "Main point in main clause. One idea per sentence for plain language compliance."
+      }
+    ]
+  },
+  "_description": "Rules for how a sentence must be built. Subject leads. Verb follows within 5 words. Main point in the main clause. Sentence length varied — short follows long.",
+  "_pipeline_step": 9,
+  "_pipeline_substep": 1,
+  "rules": [
+    {
+      "rule_id": "SS_01",
+      "rule": "The subject leads every sentence.",
+      "weight": "hard",
+      "rationale": "The subject tells the reader who or what the sentence is about. Delaying it forces the reader to process context before they know the topic.",
+      "example_correct": "The convoy left the checkpoint at 0600.",
+      "example_incorrect": "At 0600, after receiving clearance from command, the convoy left the checkpoint.",
+      "fix": "Move the subject to the front. Relocate introductory context to the end or a separate sentence.",
+      "violation_type": "delayed_subject",
+      "source": "Plain Language Act 2010"
+    },
+    {
+      "rule_id": "SS_02",
+      "rule": "The main point belongs in the main clause.",
+      "weight": "hard",
+      "rationale": "Burying the main point in a subordinate clause forces the reader to excavate meaning. The main clause must carry the most important information.",
+      "example_correct": "Three staff were injured when the structure collapsed.",
+      "example_incorrect": "When the structure collapsed, which occurred at approximately 14:30 following a series of warning signs that had been reported earlier in the day, three staff were injured.",
+      "fix": "Identify the most important fact. Place it in an independent main clause. Move supporting detail to subordinate clauses or separate sentences.",
+      "violation_type": "buried_main_point",
+      "source": "Strunk & White Rule 16"
+    },
+    {
+      "rule_id": "SS_03",
+      "rule": "Vary sentence length. Short sentences must follow long ones.",
+      "weight": "hard",
+      "rationale": "A paragraph of sentences all the same length becomes monotonous and loses emphasis. Short sentences create emphasis. Long sentences carry detail. Alternating the two gives the reader rhythm and signals what matters.",
+      "example_correct": "The northern route passes through three active conflict zones and requires armed escort at all times. Do not use it after dark.",
+      "example_incorrect": "The northern route passes through three active conflict zones. It requires armed escort at all times. It should not be used after dark. Permits are required.",
+      "violation_type": "monotone_sentence_length",
+      "source": "Strunk & White Rule 14"
+    },
+    {
+      "rule_id": "SS_04",
+      "rule": "Place the most emphatic word or phrase at the end of the sentence.",
+      "weight": "soft",
+      "rationale": "The end of a sentence carries the most weight. The new information — the point the sentence is building toward — belongs there.",
+      "example_correct": "The only road out was mined.",
+      "example_incorrect": "The road that was mined was the only road out.",
+      "violation_type": "weak_sentence_ending",
+      "source": "Strunk & White Rule 18"
+    },
+    {
+      "rule_id": "SS_05",
+      "rule": "Do not join independent clauses with a comma alone.",
+      "weight": "hard",
+      "rationale": "A comma between two independent clauses — comma splice — is a structural error. Use a semicolon, a conjunction with a comma, or two separate sentences.",
+      "example_correct": "The gate was locked. No one had a key.",
+      "example_correct_alt": "The gate was locked; no one had a key.",
+      "example_incorrect": "The gate was locked, no one had a key.",
+      "violation_type": "comma_splice",
+      "source": "Strunk & White Rule 5"
+    },
+    {
+      "rule_id": "SS_06",
+      "rule": "Do not break a sentence into two with a period where a comma belongs.",
+      "weight": "hard",
+      "rationale": "A sentence fragment — a phrase or dependent clause punctuated as a complete sentence — fails to communicate a complete thought.",
+      "example_correct": "He left the building quickly, taking nothing with him.",
+      "example_incorrect": "He left the building quickly. Taking nothing with him.",
+      "violation_type": "sentence_fragment",
+      "source": "Strunk & White Rule 6"
+    },
+    {
+      "rule_id": "SS_07",
+      "rule": "Avoid a succession of loose sentences joined by and, but, or so.",
+      "weight": "soft",
+      "rationale": "A paragraph built entirely of clauses joined by and, but, or so becomes mechanical and loses emphasis. Vary the construction — use subordinate clauses, periodic sentences, and short declarative sentences.",
+      "example_correct": "The road flooded at dawn. By midday, three vehicles were stranded. Recovery teams reached them before nightfall.",
+      "example_incorrect": "The road flooded at dawn and three vehicles were stranded and recovery teams were called but they did not reach the site until afternoon.",
+      "violation_type": "loose_sentence_chain",
+      "source": "Strunk & White Rule 14"
+    },
+    {
+      "rule_id": "SS_08",
+      "rule": "A participial phrase at the beginning of a sentence must refer to the grammatical subject.",
+      "weight": "hard",
+      "rationale": "A dangling modifier — where the opening phrase refers to a word other than the subject — produces absurd or misleading sentences.",
+      "example_correct": "Walking down the road, he saw a damaged vehicle.",
+      "example_incorrect": "Walking down the road, a damaged vehicle came into view.",
+      "fix": "Ensure the subject of the main clause is the same as the actor implied in the opening phrase.",
+      "violation_type": "dangling_modifier",
+      "source": "Strunk & White Rule 7"
+    },
+    {
+      "rule_id": "SS_09",
+      "rule": "Express coordinate ideas in similar grammatical form.",
+      "weight": "soft",
+      "rationale": "Parallel construction makes lists and comparisons easier to read. When items in a series are grammatically inconsistent, the reader must re-process each item individually.",
+      "example_correct": "The team will assess the damage, document the findings, and submit the report.",
+      "example_incorrect": "The team will assess the damage, the findings should be documented, and submission of the report is required.",
+      "violation_type": "broken_parallel_structure",
+      "source": "Strunk & White Rule 15"
+    }
+  ]
+}

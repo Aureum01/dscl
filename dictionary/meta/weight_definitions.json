@@ -1,0 +1,177 @@
+{
+  "_citation": {
+    "sources": [
+      {
+        "name": "Original — DSCL hard/soft/contextual weight model",
+        "url": null,
+        "note": "Weight classification system defined in this architecture. Hard/soft/contextual maps to how strictly each rule must be applied across every file in the repository."
+      },
+      {
+        "name": "BEA Shared Task GEC — Hard vs Soft Error Classification",
+        "url": "https://www.cl.cam.ac.uk/research/nl/bea2019st",
+        "note": "Cambridge Grammar Error Correction shared task. Hard errors are those that must be corrected — they represent clear violations. Soft errors are those where context determines whether correction is required."
+      },
+      {
+        "name": "C4 200M Grammar Error Correction Dataset",
+        "url": "https://www.kaggle.com/datasets/a0155991rliwei/c4-200m",
+        "note": "Google / Kaggle. Error weight by type used as reference for distinguishing absolute violations from context-dependent ones."
+      }
+    ]
+  },
+  "_description": "Defines what hard, soft, and contextual mean across every file in the repository. A model reading any rule file must consult this file to know how strictly to apply the rule. Weight is declared on every rule entry in every JSON file in the /dictionary.",
+  "_pipeline_step": 13,
+  "_rule": "Read this file before applying any rule. Every rule has a weight field. The weight field tells you how to treat a violation. There are three weights: hard, soft, and contextual. Nothing else.",
+
+  "weights": [
+    {
+      "weight": "hard",
+      "definition": "Absolute constraint. No violation permitted. Rewrite until compliant.",
+      "model_instruction": "If output violates a hard rule, rewrite the offending sentence or phrase immediately. Do not proceed to the next pipeline step with a hard rule violation present. Do not log the violation as an exception. Hard rules have no exceptions except the domain_exceptions.json override described in conflict_resolution.json level 5 — and that override applies only to vocabulary precision, not to grammar or syntax hard rules.",
+      "violation_response": "rewrite — no exceptions",
+      "can_be_overridden_by": "domain_exceptions.json — vocabulary only, when domain tag matches and no simpler word exists",
+      "cannot_be_overridden_by": [
+        "soft rules at any level",
+        "contextual rules",
+        "tiebreaker",
+        "FK grade target",
+        "sentence length target",
+        "user instruction"
+      ],
+      "examples_of_hard_rules": [
+        "VR_01 — active voice default",
+        "VR_05 — no two passive constructions in sequence",
+        "VP_01 — verb within 5 words of subject",
+        "VP_04 — verb carries action, not nominalization",
+        "MR_03 — adverbs modifying said/stated blocked",
+        "MR_04 — intensifiers deleted",
+        "NB_01 through NB_30 — nominalization blocklist",
+        "SS_02 — main point in main clause",
+        "SS_05 — no comma splice",
+        "SS_08 — no dangling modifier",
+        "CL_05 — no comma splice",
+        "CL_11 — no tense shift within same time frame",
+        "PS_01 — topic sentence leads every paragraph",
+        "PS_02 — one idea per paragraph",
+        "PS_04 — crisis paragraph 2-3 sentences maximum",
+        "SL_01 — sentence hard ceiling",
+        "SL_03 — monotone sentence length violation",
+        "SY_03 — 4+ syllable word without domain exception",
+        "SY_04 — three consecutive polysyllabic words",
+        "SY_05 — do not replace precise term with shorter word that loses meaning",
+        "All ai_signature_blocklist entries in syllable_load.json"
+      ]
+    },
+    {
+      "weight": "soft",
+      "definition": "Default constraint. Follow unless conflict_resolution.json permits an exception. Log the exception class when an override occurs.",
+      "model_instruction": "Apply soft rules as the default. If following a soft rule produces a conflict with a higher-priority rule in conflict_resolution.json, the higher-priority rule wins and the soft rule exception is logged. Soft rules are not optional — they are the standard. They only yield when the conflict resolution hierarchy requires it.",
+      "violation_response": "apply unless conflict_resolution.json permits an exception — log the exception",
+      "can_be_overridden_by": [
+        "hard rules at any level",
+        "higher-level rules in conflict_resolution.json hierarchy",
+        "tiebreaker when two soft rules at the same level conflict"
+      ],
+      "cannot_be_overridden_by": [
+        "user preference",
+        "stylistic variation",
+        "another soft rule at the same hierarchy level — tiebreaker applies"
+      ],
+      "examples_of_soft_rules": [
+        "VR_02 — passive permitted when actor unknown",
+        "VR_03 — passive permitted when actor irrelevant",
+        "VP_03 — prefer strong transitive verbs over to be",
+        "MR_01 — one adjective per noun",
+        "MR_02 — two adjectives only if non-overlapping",
+        "SS_03 — vary sentence length",
+        "SS_04 — emphatic word at sentence end",
+        "SS_07 — avoid loose sentence chain",
+        "SS_09 — parallel construction",
+        "CL_02 — actor before comma",
+        "CL_08 — relative clause follows antecedent",
+        "CL_09 — that vs which vs who",
+        "CL_10 — who vs whom",
+        "PS_03 — general paragraph 3-6 sentences",
+        "PS_05 — final sentence closes on emphasis",
+        "PS_06 — no undeveloped single sentence paragraph",
+        "SL_02 — paragraph average within target range",
+        "SL_04 — no excessive short sentence chain",
+        "SY_01 — prefer 1-2 syllable words",
+        "SY_02 — 3-syllable word only when no simpler word fits"
+      ]
+    },
+    {
+      "weight": "contextual",
+      "definition": "Domain-dependent. Only applies when the domain tag in domain_register.json or domain_exceptions.json activates it. If the domain is untagged or unmatched, treat as soft.",
+      "model_instruction": "Check the active domain tag before applying a contextual rule. If the domain matches the rule's activation condition, apply the rule at its stated strength. If the domain does not match, treat the rule as soft. Contextual rules never apply globally — they are always scoped to a specific domain.",
+      "violation_response": "apply at stated strength when domain tag matches — treat as soft when domain is unmatched",
+      "activation_condition": "domain tag in domain_register.json or domain_exceptions.json must match the rule's domain field",
+      "if_domain_untagged": "treat as soft",
+      "examples_of_contextual_rules": [
+        "VR_02 — passive when actor unknown (contextual — only applies when actor is genuinely unknown)",
+        "VR_03 — passive when actor irrelevant (contextual — only applies when actor adds no value)",
+        "VR_04 — passive when actor deliberately withheld (contextual — legal/diplomatic domains)",
+        "SY_06 — proper nouns and domain exceptions exempt from syllable rules (contextual — domain tag required)",
+        "Domain exceptions in domain_exceptions.json — all entries are contextual by definition"
+      ]
+    }
+  ],
+
+  "weight_application_summary": {
+    "hard": "Rewrite until compliant. No logging. No exceptions except domain_exceptions.json vocabulary override.",
+    "soft": "Apply by default. Yield to higher-priority rules when conflict_resolution.json requires. Log the exception.",
+    "contextual": "Apply when domain tag matches. Treat as soft when domain is unmatched or untagged."
+  },
+
+  "reading_a_rule_file": {
+    "instruction": "Every rule entry in every file in the /dictionary has a weight field. When you read a rule, find its weight field first. Then consult this file to know how strictly to apply it. Do not apply rules without knowing their weight.",
+    "example": {
+      "rule_id": "VR_01",
+      "rule": "Use active voice as the default for all sentences.",
+      "weight": "hard",
+      "interpretation": "This is a hard rule. If output is passive where active is possible, rewrite it. No exceptions. Do not log — rewrite."
+    }
+  },
+
+  "common_mistakes": [
+    {
+      "mistake": "Treating a soft rule as optional",
+      "correction": "Soft rules are the default. They are only overridden when conflict_resolution.json hierarchy requires it. They are not skipped because output looks acceptable without them."
+    },
+    {
+      "mistake": "Applying a contextual rule globally",
+      "correction": "Contextual rules are scoped. Check the domain tag. If it does not match, treat the rule as soft."
+    },
+    {
+      "mistake": "Logging a hard rule violation instead of rewriting",
+      "correction": "Hard rule violations are never logged. They are rewritten until compliant. Logging is only for soft rule exceptions."
+    },
+    {
+      "mistake": "Using the tiebreaker before checking the hierarchy",
+      "correction": "The tiebreaker applies only when two rules are at the same hierarchy level. Check conflict_resolution.json first. The tiebreaker is the last resort, not the first."
+    },
+    {
+      "mistake": "Allowing an AI signature word because the domain exception permits a complex term",
+      "correction": "AI signature words are blocked at syllable_load.json step 6 before domain exceptions are checked at step 5. The domain exception path does not apply to AI signature words. They are always blocked."
+    }
+  ]
+  ,
+  "rule_weights": {
+      "BW_01": "hard",
+      "VB_01": "soft",
+      "VR_01": "hard",
+      "VR_05": "hard",
+      "VP_01": "hard",
+      "VP_04": "hard",
+      "NB_01": "hard",
+      "SS_01": "soft",
+      "SS_02": "hard",
+      "SS_05": "hard",
+      "SS_08": "hard",
+      "SL_01": "hard",
+      "SL_03": "hard",
+      "RD_01": "soft",
+      "MD_01": "soft",
+      "MR_03": "hard",
+      "MR_04": "hard"
+  }
+}

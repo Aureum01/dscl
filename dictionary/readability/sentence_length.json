@@ -1,0 +1,133 @@
+{
+  "_citation": {
+    "sources": [
+      {
+        "name": "Flesch-Kincaid Grade Level Formula",
+        "url": "https://readable.com/readability/flesch-reading-ease-flesch-kincaid-grade-level",
+        "note": "Sentence length is the primary FK driver. Average words per sentence is the most controllable variable in the formula."
+      },
+      {
+        "name": "Plain Language Act 2010",
+        "url": "https://www.plainlanguage.gov",
+        "note": "Short sentences as a core plain language requirement. Long sentences are the single most common plain language violation in government documents."
+      },
+      {
+        "name": "Strunk & White, Elements of Style — Rule 13: Omit Needless Words",
+        "url": "https://www.gutenberg.org/ebooks/37134",
+        "note": "Public domain. A sentence should contain no unnecessary words. Concision is the foundation of readable sentence length."
+      },
+      {
+        "name": "Strunk & White, Elements of Style — Rule 14: Avoid a Succession of Loose Sentences",
+        "url": "https://www.gutenberg.org/ebooks/37134",
+        "note": "Public domain. Monotone sentence length is its own violation. Short must follow long."
+      }
+    ]
+  },
+  "_description": "Sentence length is the primary FK driver. Average target: 15-20 words for general output. Crisis target: 10-15 words average. Hard ceiling: 35 words per sentence. Monotone length is its own violation — short sentences must follow long ones.",
+  "_pipeline_step": 11,
+  "_critical_rule": "Sentence length is checked after paragraph assembly (step 11), not during word selection. Any sentence above the hard ceiling must be rewritten before the page is assembled.",
+  "targets": {
+    "general_output": {
+      "average_min": 15,
+      "average_max": 20,
+      "hard_ceiling": 35,
+      "hard_floor": null,
+      "note": "Average of 15-20 words produces FK 6-8 when paired with 1-2 syllable word average. Hard ceiling of 35 words is absolute — no sentence may exceed it regardless of domain."
+    },
+    "crisis_operational": {
+      "average_min": 10,
+      "average_max": 15,
+      "hard_ceiling": 25,
+      "hard_floor": null,
+      "note": "Crisis output demands shorter sentences. A reader under stress loses the thread of a sentence above 25 words. Hard ceiling is 25 — stricter than the general ceiling."
+    },
+    "medical_patient": {
+      "average_min": 10,
+      "average_max": 15,
+      "hard_ceiling": 25,
+      "hard_floor": null,
+      "note": "Same as crisis. Patients under stress process at reduced cognitive load."
+    },
+    "professional_report": {
+      "average_min": 15,
+      "average_max": 22,
+      "hard_ceiling": 35,
+      "hard_floor": null,
+      "note": "Slightly wider range than general. Professional readers can track longer sentences when the structure is clean."
+    },
+    "technical_specialist": {
+      "average_min": 18,
+      "average_max": 25,
+      "hard_ceiling": 35,
+      "hard_floor": null,
+      "note": "Technical documentation sometimes requires longer sentences to preserve precision. Hard ceiling still applies."
+    },
+    "academic_research": {
+      "average_min": 20,
+      "average_max": 30,
+      "hard_ceiling": 40,
+      "hard_floor": null,
+      "note": "Academic writing permits longer sentences when they carry precise meaning. Hard ceiling raised to 40 for this domain only."
+    }
+  },
+  "rules": [
+    {
+      "rule_id": "SL_01",
+      "rule": "No sentence may exceed the hard ceiling for its domain.",
+      "weight": "hard",
+      "rationale": "Sentences above the hard ceiling are structurally too complex for any reader to process in a single pass. They must be split regardless of content.",
+      "action": "Split at the nearest logical boundary. Place the main clause in the first sentence. Move subordinate information to the second.",
+      "violation_type": "sentence_exceeds_hard_ceiling"
+    },
+    {
+      "rule_id": "SL_02",
+      "rule": "Average sentence length across a paragraph must fall within the domain target range.",
+      "weight": "soft",
+      "rationale": "Individual sentences within the target range do not guarantee the paragraph average is correct. Check the average across all sentences in the paragraph.",
+      "action": "If average is above the ceiling, identify the longest sentences and split them. If average is below the floor, combine two closely related short sentences.",
+      "violation_type": "paragraph_average_outside_target"
+    },
+    {
+      "rule_id": "SL_03",
+      "rule": "Monotone sentence length is a violation. Short sentences must follow long ones.",
+      "weight": "hard",
+      "rationale": "A paragraph of sentences all the same length loses emphasis and becomes mechanical. Rhythm requires variation. A short sentence after a long one signals importance and gives the reader a pause.",
+      "example_correct": "The northern route passes through three active conflict zones and requires armed escort at any hour of the day or night. Do not use it.",
+      "example_incorrect": "The northern route is dangerous. It has conflict zones. It needs an escort. It runs day and night.",
+      "action": "After any sentence of 20+ words, the following sentence must be shorter than 15 words. After any sentence of 30+ words, the following sentence must be shorter than 12 words.",
+      "violation_type": "monotone_sentence_length",
+      "source": "Strunk & White Rule 14"
+    },
+    {
+      "rule_id": "SL_04",
+      "rule": "A sentence of fewer than 5 words is permitted only as a deliberate emphasis or direct instruction.",
+      "weight": "soft",
+      "rationale": "Very short sentences are powerful when used deliberately. They lose that power if overused. Three or more consecutive sentences under 8 words become choppy and fragmented.",
+      "example_permitted": "Do not cross.",
+      "example_not_permitted": "Roads are bad. Avoid them. Stay inside. Wait.",
+      "action": "No more than two consecutive sentences under 8 words. After two short sentences, the next must be longer.",
+      "violation_type": "excessive_short_sentence_chain"
+    },
+    {
+      "rule_id": "SL_05",
+      "rule": "Reduce sentence length before changing word choice when FK grade is too high.",
+      "weight": "hard",
+      "rationale": "Sentence length has a larger effect on FK grade than word syllable count in practical plain language writing. Splitting a 30-word sentence into two 15-word sentences reduces FK more efficiently than replacing polysyllabic words.",
+      "action": "If FK exceeds ceiling: split sentences first. Then check syllable load. Then check for nominalizations and intensifiers.",
+      "violation_type": "wrong_correction_order",
+      "source": "Flesch-Kincaid formula — sentence length as primary FK variable"
+    }
+  ],
+  "split_guidance": {
+    "description": "How to split a sentence that exceeds the hard ceiling",
+    "steps": [
+      "1. Identify the main clause — the most important fact",
+      "2. Make the main clause the first sentence — end with a period",
+      "3. Move subordinate information to the second sentence",
+      "4. Check that both resulting sentences are complete independent clauses",
+      "5. Check that the second sentence is shorter than the first"
+    ],
+    "example_before": "The convoy, which had been delayed at the northern checkpoint for six hours due to a vehicle inspection conducted by armed personnel who had not been notified of the convoy's clearance, finally departed at 0300.",
+    "example_after": "The convoy departed at 0300 after a six-hour delay at the northern checkpoint. Armed personnel conducted a vehicle inspection — they had not been notified of the convoy's clearance."
+  }
+}

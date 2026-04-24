@@ -1,0 +1,127 @@
+DSCL — Google 10k Cross-Reference Report
+────────────────────────────────────────────────────────────
+
+Source: https://github.com/first20hours/google-10000-english
+
+PRIMARY VOCAB (ranks 1-5000)
+  Total entries    : 5000
+  Google validated : 4443
+  COCA only        : 557
+  Validation rate  : 88.9%
+
+FALLBACK VOCAB (ranks 5001-60000 sample)
+  Total entries    : 5600
+  Google validated : 424
+  COCA only        : 5176
+  Validation rate  : 7.6%
+
+────────────────────────────────────────────────────────────
+WORDS IN GOOGLE 10k NOT IN EITHER VOCAB FILE: 5937
+(These may be worth reviewing for addition to primary_vocab)
+
+  rank     8  is
+  rank    20  are
+  rank    29  an
+  rank    30  was
+  rank    40  has
+  rank    81  c
+  rank    82  e
+  rank    85  been
+  rank    88  were
+  rank    90  s
+  rank    91  services
+  rank    98  x
+  rank   106  had
+  rank   118  n
+  rank   124  b
+  rank   128  products
+  rank   140  t
+  rank   154  jan
+  rank   158  d
+  rank   161  rights
+  rank   163  books
+  rank   167  m
+  rank   169  links
+  rank   172  years
+  rank   177  items
+  rank   179  r
+  rank   186  said
+  rank   187  de
+  rank   188  does
+  rank   198  reviews
+  rank   202  games
+  rank   204  days
+  rank   206  p
+  rank   213  f
+  rank   217  ebay
+  rank   221  comments
+  rank   222  made
+  rank   227  details
+  rank   231  hotels
+  rank   232  did
+  rank   239  using
+  rank   240  results
+  rank   247  posted
+  rank   252  states
+  rank   256  dvd
+  rank   257  shipping
+  rank   258  reserved
+  rank   263  l
+  rank   265  based
+  rank   266  w
+  rank   269  o
+  rank   274  prices
+  rank   278  women
+  rank   290  pages
+  rank   291  uk
+  rank   296  sports
+  rank   301  g
+  rank   306  members
+  rank   313  systems
+  rank   320  h
+  rank   327  resources
+  rank   329  posts
+  rank   336  pictures
+  rank   344  directory
+  rank   354  children
+  rank   356  usa
+  rank   358  students
+  rank   359  v
+  rank   362  times
+  rank   363  sites
+  rank   369  events
+  rank   372  john
+  rank   375  hours
+  rank   380  non
+  rank   381  k
+  rank   382  y
+  rank   394  listing
+  rank   401  tools
+  rank   407  movies
+  rank   412  york
+  rank   415  jobs
+  rank   417  j
+  rank   423  u
+  rank   430  canada
+  rank   441  men
+  rank   442  categories
+  rank   452  conditions
+  rank   454  windows
+  rank   455  photos
+  rank   477  features
+  rank   488  accessories
+  rank   491  forums
+  rank   493  la
+  rank   497  questions
+  rank   499  yahoo
+  rank   500  going
+  rank   505  dec
+  rank   512  articles
+  rank   513  san
+  rank   517  looking
+  ... and 5837 more
+
+────────────────────────────────────────────────────────────
+NOTE: google_validated: true means the word appears in both
+COCA frequency data and the Google Trillion Word Corpus.
+These are the most reliable entries for plain language output.

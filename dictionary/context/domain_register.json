@@ -1,0 +1,182 @@
+{
+  "_citation": {
+    "sources": [
+      {
+        "name": "Plain Language Act 2010",
+        "url": "https://www.plainlanguage.gov",
+        "note": "Domain-specific plain language compliance standards"
+      },
+      {
+        "name": "Flesch-Kincaid Grade Level Formula",
+        "url": "https://readable.com/readability/flesch-reading-ease-flesch-kincaid-grade-level",
+        "note": "FK grade targets by document type"
+      },
+      {
+        "name": "Medicare/Medicaid Plain Language Compliance",
+        "url": "https://www.langsolinc.com",
+        "note": "Grade 5-7 medical standard for patient-facing documents"
+      },
+      {
+        "name": "COCA Genre-Balanced Data",
+        "url": "https://www.wordfrequency.info",
+        "note": "Domain frequency profiles across spoken, fiction, magazine, newspaper, academic"
+      }
+    ]
+  },
+  "_description": "Maps output domains to their permitted register ceiling and FK target. Controls what kind of language is allowed for each use case. The pipeline reads this file at step 3 after domain detection.",
+  "_pipeline_step": 3,
+  "_rules": {
+    "register_ceiling_enforced": true,
+    "fk_target_is_composition_constraint": true,
+    "fk_target_is_not_a_scoring_tool": true,
+    "if_domain_unmatched": "fall back to general_default"
+  },
+  "domains": [
+    {
+      "domain": "travel_risk",
+      "register_ceiling": "abstract_general",
+      "fk_target": "6-8",
+      "fk_floor": 6,
+      "fk_ceiling": 8,
+      "audience": "general_public",
+      "note": "Travelers of mixed backgrounds. Concrete threat language. No jargon. Short paragraphs. Crisis sub-type drops to FK 5-7.",
+      "crisis_subtype": {
+        "fk_target": "5-7",
+        "fk_floor": 5,
+        "fk_ceiling": 7,
+        "paragraph_length": "2-3 sentences"
+      },
+      "examples": [
+        "travel advisory",
+        "country risk assessment",
+        "security briefing",
+        "evacuation notice"
+      ]
+    },
+    {
+      "domain": "medical_patient",
+      "register_ceiling": "abstract_general",
+      "fk_target": "5-7",
+      "fk_floor": 5,
+      "fk_ceiling": 7,
+      "audience": "general_public",
+      "note": "Patient-facing documents. Medicare/Medicaid grade 5-7 standard. No clinical jargon unless explained immediately after.",
+      "examples": [
+        "discharge instructions",
+        "medication guide",
+        "consent form summary",
+        "patient letter"
+      ]
+    },
+    {
+      "domain": "legal_contract",
+      "register_ceiling": "abstract_technical",
+      "fk_target": "8-10",
+      "fk_floor": 8,
+      "fk_ceiling": 10,
+      "audience": "professional",
+      "note": "Legal terms of art permitted via domain_exceptions.json. Words like liability and indemnify have no plain English equivalent in enforceable contract context.",
+      "domain_exceptions_active": true,
+      "examples": [
+        "contract clause",
+        "liability section",
+        "terms and conditions",
+        "indemnity agreement"
+      ]
+    },
+    {
+      "domain": "news_journalism",
+      "register_ceiling": "abstract_general",
+      "fk_target": "6-9",
+      "fk_floor": 6,
+      "fk_ceiling": 9,
+      "audience": "general_public",
+      "note": "Inverted pyramid structure assumed. AP style conventions apply. No passive chains. Subject-verb proximity hard rule.",
+      "examples": [
+        "news article",
+        "press release",
+        "editorial",
+        "news summary"
+      ]
+    },
+    {
+      "domain": "academic_research",
+      "register_ceiling": "abstract_technical",
+      "fk_target": "12-16",
+      "fk_floor": 12,
+      "fk_ceiling": 16,
+      "audience": "specialist",
+      "note": "Domain knowledge assumed in reader. Technical vocabulary permitted without definition. Passive voice permitted when actor is convention rather than exception.",
+      "domain_exceptions_active": true,
+      "examples": [
+        "research paper",
+        "literature review",
+        "methodology section",
+        "abstract"
+      ]
+    },
+    {
+      "domain": "professional_report",
+      "register_ceiling": "abstract_technical",
+      "fk_target": "8-10",
+      "fk_floor": 8,
+      "fk_ceiling": 10,
+      "audience": "professional",
+      "note": "Business and operational reports. Mixed audience of specialists and managers. Plain summary leads each section.",
+      "examples": [
+        "risk report",
+        "incident report",
+        "assessment summary",
+        "briefing document"
+      ]
+    },
+    {
+      "domain": "crisis_operational",
+      "register_ceiling": "abstract_general",
+      "fk_target": "5-7",
+      "fk_floor": 5,
+      "fk_ceiling": 7,
+      "audience": "general_public",
+      "note": "Highest urgency output type. Short sentences. Short paragraphs (2-3 sentences max). Concrete verbs only. No nominalization. No passive.",
+      "paragraph_length": "2-3 sentences",
+      "sentence_length_target": "10-15 words",
+      "examples": [
+        "emergency notice",
+        "evacuation order",
+        "alert bulletin",
+        "operational directive"
+      ]
+    },
+    {
+      "domain": "technical_specialist",
+      "register_ceiling": "abstract_technical",
+      "fk_target": "10-12",
+      "fk_floor": 10,
+      "fk_ceiling": 12,
+      "audience": "specialist",
+      "note": "Technical documentation for domain specialists. Precision over simplicity when the two conflict. Domain exceptions active.",
+      "domain_exceptions_active": true,
+      "examples": [
+        "technical manual",
+        "engineering specification",
+        "system documentation",
+        "technical briefing"
+      ]
+    },
+    {
+      "domain": "general_default",
+      "register_ceiling": "abstract_general",
+      "fk_target": "6-8",
+      "fk_floor": 6,
+      "fk_ceiling": 8,
+      "audience": "general_public",
+      "note": "Fallback domain. Used when no domain can be detected from the input. Matches Plain Language Act default standard.",
+      "is_default": true,
+      "examples": [
+        "general correspondence",
+        "unclassified output",
+        "default response"
+      ]
+    }
+  ]
+}

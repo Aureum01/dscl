@@ -1,0 +1,263 @@
+{
+  "_citation": {
+    "sources": [
+      {
+        "name": "Flesch-Kincaid Grade Level Formula",
+        "url": "https://readable.com/readability/flesch-reading-ease-flesch-kincaid-grade-level",
+        "note": "Syllables per word is the secondary FK driver. Formula coefficient: 11.8 × (syllables/words). Higher syllable-per-word ratio raises FK grade."
+      },
+      {
+        "name": "COCA Frequency Data",
+        "url": "https://www.wordfrequency.info",
+        "note": "High-frequency words in COCA are predominantly 1-2 syllables. Words above rank 5000 trend toward 3+ syllables."
+      },
+      {
+        "name": "BNC/COCA Word Family Lists 1k-2k bands",
+        "url": "https://www.eapfoundation.com/vocab/general/bnccoca/",
+        "note": "1k-2k bands are dominated by 1-2 syllable words. Low-syllable high-frequency baseline for plain language composition."
+      },
+      {
+        "name": "Plain Language Act 2010",
+        "url": "https://www.plainlanguage.gov",
+        "note": "Prefer short words. Use technical terms only when necessary."
+      },
+      {
+        "name": "Max Planck Institute — AI Linguistic Imprinting Study 2024",
+        "url": "https://walterwrites.ai/most-common-chatgpt-words-to-avoid/",
+        "note": "Words like delve, robust, and pivotal spiked over 50% in published text after ChatGPT release. Documented AI signature vocabulary."
+      },
+      {
+        "name": "PubMed / medRxiv — Delving into PubMed Records 2024",
+        "url": "https://www.medrxiv.org/content/10.1101/2024.05.14.24307373v1.full.pdf",
+        "note": "Corpus study of AI word frequency spikes in academic literature. Words ranked by anomalous rate post-2022: delve, underscore, meticulous, commendable, showcase, intricate, tapestry, realm, cutting-edge, prowess."
+      },
+      {
+        "name": "Embryo — Cross-referenced AI Overuse Word List (March 2025)",
+        "url": "https://embryo.com/blog/list-words-ai-overuses/",
+        "note": "Cross-referenced list from Gemini, ChatGPT, Claude, Qwen, DeepSeek output analysis. Validated against GPTZero AI vocabulary checker."
+      },
+      {
+        "name": "Wikipedia — Signs of AI Writing",
+        "url": "https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing",
+        "note": "Field guide of AI writing patterns documented in Wikipedia articles. GPT-4 and GPT-4o era word lists documented with real examples."
+      }
+    ]
+  },
+  "_description": "Syllables per word is the secondary FK driver. Prefer 1-2 syllable words. Three or more polysyllabic words in sequence triggers a rewrite. AI signature words are always blocked regardless of domain or syllable count — they carry no meaning that a simpler word cannot carry, and they signal machine-generated text.",
+  "_pipeline_step": 6,
+  "_critical_rule": "Syllable load is checked at step 6 before grammar and syntax rules apply. AI signature words are blocked at this step — not at the register layer. A word may pass the register ceiling check and still be blocked here if it appears on the AI signature list.",
+
+  "targets": {
+    "preferred_syllable_range": "1-2 syllables per word",
+    "permitted_with_justification": "3 syllables — when no 1-2 syllable word carries the same precise meaning",
+    "domain_exception_only": "4+ syllables — only when domain_exceptions.json permits and domain tag matches",
+    "sequence_trigger": "3 or more consecutive words of 3+ syllables triggers a rewrite of that phrase"
+  },
+
+  "syllable_rules": [
+    {
+      "rule_id": "SY_01",
+      "rule": "Prefer 1-2 syllable words for all vocabulary selections.",
+      "weight": "soft",
+      "rationale": "1-2 syllable words are the most frequent in English across all corpora. They are processed faster, retained more easily, and understood by the widest audience.",
+      "example_correct": "The road is blocked. Use the south exit.",
+      "example_incorrect": "The thoroughfare is obstructed. Utilize the southerly egress.",
+      "source": "COCA frequency data — 1k-2k bands"
+    },
+    {
+      "rule_id": "SY_02",
+      "rule": "Use a 3-syllable word only when no 1-2 syllable word carries the same precise meaning.",
+      "weight": "soft",
+      "rationale": "Three-syllable words are not blocked. The constraint is that a simpler word must be attempted first.",
+      "example_correct_3syl": "The committee will analyze the data.",
+      "example_incorrect_3syl": "The committee will carry out an analysis of the data.",
+      "source": "vocabulary selection order in pipeline.json step 5"
+    },
+    {
+      "rule_id": "SY_03",
+      "rule": "Words of 4+ syllables require a domain exception entry.",
+      "weight": "hard",
+      "rationale": "Words of 4+ syllables are rarely in everyday use. Without a domain exception, they must be replaced.",
+      "violation_type": "polysyllabic_word_without_exception",
+      "action": "Check domain_exceptions.json. If no entry exists for the domain, replace with the nearest 1-2 syllable equivalent."
+    },
+    {
+      "rule_id": "SY_04",
+      "rule": "Three or more consecutive words of 3+ syllables triggers a rewrite of that phrase.",
+      "weight": "hard",
+      "rationale": "A sequence of polysyllabic words forces the reader to decode multiple complex words with no cognitive rest.",
+      "example_correct": "The organization reviewed the proposal.",
+      "example_incorrect": "The organizational assessment committee evaluated the proposal.",
+      "violation_type": "polysyllabic_sequence",
+      "action": "Identify the word in the sequence with the best 1-2 syllable replacement. Replace it to break the sequence."
+    },
+    {
+      "rule_id": "SY_05",
+      "rule": "Do not replace a precise term with a shorter word that loses meaning.",
+      "weight": "hard",
+      "rationale": "Syllable reduction is secondary to meaning preservation.",
+      "source": "conflict_resolution.json — vocabulary precision overrides syllable optimization"
+    },
+    {
+      "rule_id": "SY_06",
+      "rule": "Proper nouns and active domain exceptions are exempt from syllable rules.",
+      "weight": "contextual",
+      "rationale": "A name or domain term of art cannot be replaced with a shorter word."
+    }
+  ],
+
+  "ai_signature_blocklist": {
+    "_description": "Words and phrases that appear at anomalously high rates in LLM output relative to human writing corpora. Grounded in the Max Planck Institute study, PubMed corpus analysis, Embryo cross-referenced list, and Wikipedia AI writing signs documentation. All entries are blocked regardless of domain, register ceiling, or FK target. No exceptions.",
+    "_action": "Delete or replace with the direct plain English equivalent. If no equivalent exists because the word carries no real meaning, delete it entirely.",
+    "_sources": [
+      "Max Planck Institute 2024 study — 50%+ spike in AI text post-ChatGPT",
+      "PubMed medRxiv corpus study 2024 — ranked anomalous rate list",
+      "Embryo cross-referenced list March 2025 — GPTZero validated",
+      "Wikipedia Signs of AI Writing — GPT-4 and GPT-4o era documented patterns"
+    ],
+
+    "verbs": [
+      { "word": "delve",        "replace_with": "look at / examine / explore",     "note": "Anomalously high LLM rate. Rare in human writing. Top of PubMed ranked list." },
+      { "word": "delve into",   "replace_with": "look at / examine",               "note": "Phrase variant of delve. Same block." },
+      { "word": "utilize",      "replace_with": "use",                             "note": "No meaning beyond use. Always replace." },
+      { "word": "leverage",     "replace_with": "use",                             "note": "Business jargon. No added meaning over use." },
+      { "word": "facilitate",   "replace_with": "help / allow / enable",           "note": "Nominalization trap. Replace with direct verb." },
+      { "word": "foster",       "replace_with": "build / grow / support",          "note": "Vague. Replace with what is actually happening." },
+      { "word": "elevate",      "replace_with": "raise / improve / lift",          "note": "Overused in LLM motivational and professional output." },
+      { "word": "enhance",      "replace_with": "improve / strengthen / add to",   "note": "Anomalously high in academic AI text — PubMed study." },
+      { "word": "empower",      "replace_with": "give / allow / enable",           "note": "Vague. Name what is actually being given or allowed." },
+      { "word": "underscore",   "replace_with": "show / confirm / highlight",      "note": "High anomalous rate in PubMed study." },
+      { "word": "showcase",     "replace_with": "show / present / display",        "note": "PubMed ranked list. Replace with show." },
+      { "word": "streamline",   "replace_with": "simplify / reduce / cut",         "note": "Business filler. Name the specific change." },
+      { "word": "optimize",     "replace_with": "improve / fix / adjust",          "note": "Vague. State what specifically is being improved." },
+      { "word": "embark",       "replace_with": "start / begin",                   "note": "Overused in LLM narrative and motivational output." },
+      { "word": "resonate",     "replace_with": "connect / appeal / matter",       "note": "Vague emotional filler." },
+      { "word": "tailor",       "replace_with": "adjust / adapt / fit",            "note": "Marketing filler." },
+      { "word": "thrive",       "replace_with": "succeed / grow / do well",        "note": "Overused in LLM aspirational language." },
+      { "word": "amplify",      "replace_with": "increase / strengthen / grow",    "note": "Vague. Name the specific change." },
+      { "word": "augment",      "replace_with": "add to / increase / expand",      "note": "Unnecessary complexity. Replace with direct verb." },
+      { "word": "harness",      "replace_with": "use / apply",                     "note": "Overused in AI tech and business writing." },
+      { "word": "unlock",       "replace_with": "open / access / allow",           "note": "Marketing filler. Name what is opened or accessed." },
+      { "word": "unleash",      "replace_with": "release / use / apply",           "note": "Marketing filler. No added meaning." },
+      { "word": "transform",    "replace_with": "change",                          "note": "Overused. Change is almost always sufficient." },
+      { "word": "drive",        "replace_with": "push / cause / lead",             "note": "Vague. Name the specific mechanism." },
+      { "word": "glean",        "replace_with": "get / find / learn",              "note": "Unnecessarily formal. Replace with direct verb." }
+    ],
+
+    "adjectives": [
+      { "word": "robust",         "replace_with": "strong / reliable / solid",       "note": "Top AI signature word. Max Planck 50%+ spike." },
+      { "word": "comprehensive",  "replace_with": "full / complete / detailed",      "note": "Replace with the specific claim it makes." },
+      { "word": "holistic",       "replace_with": "full / whole / complete",         "note": "No precise meaning. Replace with what is included." },
+      { "word": "nuanced",        "replace_with": "detailed / specific / careful",   "note": "Used as filler. Describe the nuance — do not label it." },
+      { "word": "pivotal",        "replace_with": "key / critical / central",        "note": "Max Planck 50%+ spike. PubMed ranked list." },
+      { "word": "meticulous",     "replace_with": "careful / thorough / exact",      "note": "Anomalously high in PubMed study." },
+      { "word": "commendable",    "replace_with": "good / strong / well done",       "note": "PubMed ranked list. Evaluative filler." },
+      { "word": "intricate",      "replace_with": "complex / detailed / involved",   "note": "PubMed ranked list." },
+      { "word": "invaluable",     "replace_with": "essential / very useful",         "note": "Hyperbolic filler." },
+      { "word": "groundbreaking", "replace_with": "new / first / original",          "note": "Claim it specifically instead of labelling it." },
+      { "word": "cutting-edge",   "replace_with": "new / current / latest",          "note": "PubMed ranked list. Marketing filler." },
+      { "word": "state-of-the-art","replace_with": "latest / current / advanced",   "note": "Marketing filler. Name the specific capability." },
+      { "word": "innovative",     "replace_with": "new / original",                  "note": "Vague. Describe what is new or different." },
+      { "word": "transformative", "replace_with": "significant / major / lasting",   "note": "Vague. Name what changed and how." },
+      { "word": "seamless",       "replace_with": "smooth / easy / simple",          "note": "Marketing filler. Name the specific quality." },
+      { "word": "dynamic",        "replace_with": "active / changing / varied",      "note": "Filler adjective. Name the specific quality." },
+      { "word": "vibrant",        "replace_with": "active / lively / strong",        "note": "Wikipedia AI writing signs list." },
+      { "word": "paramount",      "replace_with": "most important / critical / key", "note": "Overused formal filler." },
+      { "word": "substantial",    "replace_with": "large / significant / major",     "note": "Replace with the specific quantity or scale." },
+      { "word": "multifaceted",   "replace_with": "complex / varied",                "note": "Vague. List the facets instead." },
+      { "word": "unparalleled",   "replace_with": "unique / unlike any other",       "note": "Hyperbolic. Name the specific distinction." },
+      { "word": "profound",       "replace_with": "deep / significant / major",      "note": "Vague intensifier." },
+      { "word": "vital",          "replace_with": "essential / needed / key",        "note": "Overused in AI output." },
+      { "word": "crucial",        "replace_with": "key / critical / essential",      "note": "Overused. Wikipedia and Embryo lists." },
+      { "word": "notable",        "replace_with": "worth noting / significant",      "note": "Vague filler. Name what is notable." }
+    ],
+
+    "nouns": [
+      { "word": "tapestry",        "replace_with": "mix / combination / range",     "note": "PubMed ranked list. Metaphorical filler." },
+      { "word": "realm",           "replace_with": "area / field / world",          "note": "PubMed ranked list. Replace with the specific domain." },
+      { "word": "landscape",       "replace_with": "field / area / state",          "note": "Vague. Name the specific context." },
+      { "word": "paradigm",        "replace_with": "model / approach / system",     "note": "Academic filler. Usually replaceable with a simpler word." },
+      { "word": "synergy",         "replace_with": "combined effect / cooperation", "note": "Business jargon. Name the specific benefit." },
+      { "word": "prowess",         "replace_with": "skill / ability / strength",    "note": "PubMed ranked list." },
+      { "word": "stakeholders",    "replace_with": "name them",                     "note": "Always replace with the specific group: staff, residents, contractors." },
+      { "word": "ecosystem",       "replace_with": "system / network / environment","note": "Tech filler. Name the specific system." },
+      { "word": "journey",         "replace_with": "process / path / work",         "note": "Metaphorical filler. Name the actual process." },
+      { "word": "bandwidth",       "replace_with": "capacity / time / resource",    "note": "Tech/business filler used metaphorically." },
+      { "word": "trajectory",      "replace_with": "path / direction / trend",      "note": "Overused in analytical and business AI output." }
+    ],
+
+    "phrases": [
+      { "phrase": "it is important to note",       "replace_with": "delete — state the point directly",           "note": "Filler. The point is either important or it is not." },
+      { "phrase": "it is worth noting",            "replace_with": "delete — state the point directly",           "note": "Same as above." },
+      { "phrase": "it's important to consider",    "replace_with": "delete — state the consideration directly",   "note": "Filler." },
+      { "phrase": "in conclusion",                 "replace_with": "delete",                                       "note": "The conclusion is the last paragraph. No label needed." },
+      { "phrase": "in summary",                    "replace_with": "delete",                                       "note": "Same as in conclusion." },
+      { "phrase": "that being said",               "replace_with": "delete or rewrite as but / however",          "note": "Transitional filler." },
+      { "phrase": "moving forward",                "replace_with": "from now / next / going ahead",               "note": "Business filler." },
+      { "phrase": "going forward",                 "replace_with": "from now / next",                             "note": "Same as moving forward." },
+      { "phrase": "at the end of the day",         "replace_with": "delete or rewrite",                           "note": "Cliché filler." },
+      { "phrase": "a testament to",                "replace_with": "proof of / evidence of",                      "note": "Overused in LLM evaluative writing." },
+      { "phrase": "delve into",                    "replace_with": "look at / examine",                           "note": "Phrase variant. Same block as delve." },
+      { "phrase": "deep dive",                     "replace_with": "close look / detailed review",               "note": "Business and AI filler." },
+      { "phrase": "shed light on",                 "replace_with": "explain / show / clarify",                    "note": "Metaphorical filler." },
+      { "phrase": "in the realm of",               "replace_with": "in / within",                                 "note": "Pad phrase. Delete realm entirely." },
+      { "phrase": "in today's world",              "replace_with": "delete — start with the actual point",        "note": "Filler opener." },
+      { "phrase": "ever-evolving",                 "replace_with": "changing / developing",                       "note": "Wikipedia AI signs list." },
+      { "phrase": "a plethora of",                 "replace_with": "many / several",                              "note": "Unnecessarily formal. Many is always sufficient." },
+      { "phrase": "a multitude of",                "replace_with": "many",                                        "note": "Same as a plethora of." },
+      { "phrase": "embark on a journey",           "replace_with": "start / begin",                               "note": "Cliché filler." },
+      { "phrase": "furthermore",                   "replace_with": "delete or rewrite — use and or but",          "note": "Transitional filler. If the logic is clear, no connector is needed." },
+      { "phrase": "moreover",                      "replace_with": "also / and / in addition",                    "note": "Same as furthermore." },
+      { "phrase": "nevertheless",                  "replace_with": "but / still / even so",                       "note": "Unnecessarily formal." },
+      { "phrase": "notwithstanding",               "replace_with": "despite / even with",                        "note": "Unnecessarily formal." },
+      { "phrase": "in essence",                    "replace_with": "delete or rewrite",                           "note": "Filler. State the essence directly." },
+      { "phrase": "simply put",                    "replace_with": "delete — just put it simply",                 "note": "Meta-commentary filler." },
+      { "phrase": "broadly speaking",              "replace_with": "delete or be specific",                       "note": "Vague qualifier." },
+      { "phrase": "generally speaking",            "replace_with": "delete or be specific",                       "note": "Same as broadly speaking." }
+    ],
+
+    "transition_fillers_always_blocked": [
+      "furthermore", "moreover", "nevertheless", "notwithstanding", "therein",
+      "thereof", "thereby", "heretofore", "herein", "hence", "thus",
+      "accordingly", "subsequently", "consequently", "henceforth"
+    ],
+
+    "opener_fillers_always_blocked": [
+      "certainly, here are",
+      "certainly, here is",
+      "of course, here is",
+      "great question",
+      "absolutely",
+      "as an AI language model",
+      "in today's rapidly evolving",
+      "in today's world",
+      "in today's competitive",
+      "as we navigate",
+      "in the dynamic world of"
+    ]
+  },
+
+  "common_replacements": {
+    "description": "High-frequency polysyllabic words and their plain language replacements — syllable reduction only, not AI signature",
+    "entries": [
+      { "word": "implementation",  "syllables": 5, "replace_with": "launch / rollout" },
+      { "word": "approximately",   "syllables": 5, "replace_with": "about" },
+      { "word": "communication",   "syllables": 5, "replace_with": "message / contact" },
+      { "word": "consideration",   "syllables": 5, "replace_with": "thought / review" },
+      { "word": "administration",  "syllables": 5, "replace_with": "management / office" },
+      { "word": "organizational",  "syllables": 6, "replace_with": "group / team / company" },
+      { "word": "prioritization",  "syllables": 6, "replace_with": "ranking / ordering" },
+      { "word": "functionality",   "syllables": 5, "replace_with": "function / feature" },
+      { "word": "methodology",     "syllables": 5, "replace_with": "method / approach" },
+      { "word": "individually",    "syllables": 5, "replace_with": "each / one by one" },
+      { "word": "immediately",     "syllables": 5, "replace_with": "now / at once" },
+      { "word": "opportunity",     "syllables": 5, "replace_with": "chance" },
+      { "word": "community",       "syllables": 4, "replace_with": "people / residents / locals" },
+      { "word": "availability",    "syllables": 6, "replace_with": "access / supply" },
+      { "word": "responsibility",  "syllables": 6, "replace_with": "duty / role" },
+      { "word": "sustainability",  "syllables": 6, "replace_with": "long-term viability / lasting" },
+      { "word": "demonstrate",     "syllables": 4, "replace_with": "show" },
+      { "word": "comprehensive",   "syllables": 4, "replace_with": "full / complete" }
+    ]
+  }
+}

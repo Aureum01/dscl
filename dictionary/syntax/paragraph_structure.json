@@ -1,0 +1,114 @@
+{
+  "_citation": {
+    "sources": [
+      {
+        "name": "Strunk & White, Elements of Style — Rule 8: Make the Paragraph the Unit of Composition",
+        "url": "https://www.gutenberg.org/ebooks/37134",
+        "note": "Public domain. One paragraph to each topic. The beginning of each paragraph signals a new step."
+      },
+      {
+        "name": "Strunk & White, Elements of Style — Rule 9: Begin Each Paragraph with a Topic Sentence",
+        "url": "https://www.gutenberg.org/ebooks/37134",
+        "note": "Public domain. Topic sentence at or near the beginning. Final sentence emphasizes or states consequence."
+      },
+      {
+        "name": "NARA 10 Principles of Plain Language",
+        "url": "https://www.archives.gov/open/plain-writing/10-principles.html",
+        "note": "One idea per paragraph. Short paragraphs for operational and crisis documents."
+      },
+      {
+        "name": "Plain Language Act 2010",
+        "url": "https://www.plainlanguage.gov",
+        "note": "Paragraph structure for public-facing documents."
+      }
+    ]
+  },
+  "_description": "Topic sentence leads every paragraph. One idea per paragraph — a new idea means a new paragraph. Crisis documents: 2–3 sentences per paragraph. General output: 3–6 sentences per paragraph.",
+  "_pipeline_step": 10,
+  "rules": [
+    {
+      "rule_id": "PS_01",
+      "rule": "Every paragraph begins with a topic sentence.",
+      "weight": "hard",
+      "rationale": "The topic sentence tells the reader what the paragraph is about before they read it. Without it, the reader must work through the paragraph to discover its purpose.",
+      "example_correct": "The eastern checkpoint carries the highest risk. Armed groups operate in the area between 2000 and 0400. Vehicles have been stopped and searched on multiple occasions in the past two weeks.",
+      "example_incorrect": "Armed groups operate in the area between 2000 and 0400. Vehicles have been stopped and searched on multiple occasions. The eastern checkpoint is therefore high risk.",
+      "violation_type": "missing_topic_sentence",
+      "source": "Strunk & White Rule 9"
+    },
+    {
+      "rule_id": "PS_02",
+      "rule": "One idea per paragraph. A new idea requires a new paragraph.",
+      "weight": "hard",
+      "rationale": "Mixing two ideas in one paragraph forces the reader to separate them mentally. The paragraph break does that work for them.",
+      "example_correct": "The northern route is the fastest option. It covers 120km and takes approximately two hours under normal conditions.\n\nThe southern route is safer but slower. It adds 40km and passes through two checkpoints that require documentation.",
+      "example_incorrect": "The northern route is the fastest option and covers 120km. The southern route is safer but adds 40km and passes through two checkpoints. The northern route takes two hours under normal conditions.",
+      "violation_type": "multiple_ideas_in_paragraph",
+      "source": "Strunk & White Rule 8"
+    },
+    {
+      "rule_id": "PS_03",
+      "rule": "General output: 3–6 sentences per paragraph.",
+      "weight": "soft",
+      "rationale": "A paragraph of fewer than 3 sentences may not fully develop its topic. A paragraph of more than 6 sentences likely contains more than one idea.",
+      "min_sentences": 3,
+      "max_sentences": 6,
+      "applies_to": "general_default, professional_report, news_journalism, legal_contract, academic_research, technical_specialist",
+      "violation_type": "paragraph_length_violation",
+      "source": "Strunk & White Rule 8"
+    },
+    {
+      "rule_id": "PS_04",
+      "rule": "Crisis and operational output: 2–3 sentences per paragraph.",
+      "weight": "hard",
+      "rationale": "In crisis documents, a reader under stress cannot process long paragraphs. Each paragraph must deliver one action or one fact. Brevity is not optional.",
+      "min_sentences": 2,
+      "max_sentences": 3,
+      "applies_to": "crisis_operational, travel_risk, medical_patient",
+      "violation_type": "crisis_paragraph_too_long",
+      "source": "NARA Plain Language Principles"
+    },
+    {
+      "rule_id": "PS_05",
+      "rule": "The final sentence of a paragraph must emphasize the topic sentence or state a consequence.",
+      "weight": "soft",
+      "rationale": "The paragraph should close in conformity with how it opened. The final sentence either restates the main point with greater force or draws the logical consequence from the supporting sentences.",
+      "example_correct": "The bridge is the only crossing point in a 60km stretch. It was damaged in last week's flooding and has not been inspected since. Do not use it until engineers confirm it is safe.",
+      "example_incorrect": "The bridge is the only crossing point in a 60km stretch. It was damaged in last week's flooding. Engineers have been called.",
+      "violation_type": "weak_paragraph_closing",
+      "source": "Strunk & White Rule 9"
+    },
+    {
+      "rule_id": "PS_06",
+      "rule": "Do not write a single sentence as a standalone paragraph unless it is a transition or a deliberate emphasis.",
+      "weight": "soft",
+      "rationale": "A single-sentence paragraph usually means the idea was not developed. Exception: a sentence of transition between sections, or a short declarative sentence used deliberately for emphasis.",
+      "example_permitted": "Do not travel after dark.",
+      "example_not_permitted": "There are several risks in the area.",
+      "note": "A one-sentence paragraph used for emphasis must carry a complete, actionable point. A one-sentence paragraph that introduces a topic without developing it is a violation.",
+      "violation_type": "undeveloped_single_sentence_paragraph",
+      "source": "Strunk & White Rule 8"
+    },
+    {
+      "rule_id": "PS_07",
+      "rule": "Do not end a paragraph with a digression or unimportant detail.",
+      "weight": "soft",
+      "rationale": "The end of a paragraph carries weight. Ending on a minor detail wastes that position and leaves the reader with the wrong emphasis.",
+      "example_correct": "Three roads connect the city to the north. Two are passable. The third has been closed since Monday.",
+      "example_incorrect": "Three roads connect the city to the north. Two are passable. The third was built in 1987 and has been closed since Monday.",
+      "violation_type": "digression_at_paragraph_end",
+      "source": "Strunk & White Rule 9 — ending with a digression is particularly to be avoided"
+    }
+  ],
+  "paragraph_length_by_domain": {
+    "crisis_operational":   { "min": 2, "max": 3, "weight": "hard" },
+    "travel_risk":          { "min": 2, "max": 4, "weight": "soft" },
+    "medical_patient":      { "min": 2, "max": 3, "weight": "hard" },
+    "news_journalism":      { "min": 2, "max": 4, "weight": "soft" },
+    "general_default":      { "min": 3, "max": 6, "weight": "soft" },
+    "professional_report":  { "min": 3, "max": 6, "weight": "soft" },
+    "legal_contract":       { "min": 3, "max": 6, "weight": "soft" },
+    "technical_specialist": { "min": 3, "max": 6, "weight": "soft" },
+    "academic_research":    { "min": 4, "max": 8, "weight": "soft" }
+  }
+}

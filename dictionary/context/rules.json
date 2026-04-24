@@ -1,0 +1,223 @@
+{
+  "_meta": {
+    "file": "rules.json",
+    "version": "1.0.0",
+    "location": "dictionary/context/rules.json",
+    "description": "Global and domain-scoped linguistic rules for DSCL output validation and correction.",
+    "note": "Domain overrides always win over global rules. Custom overrides in dictionary/custom/rules/ win over everything."
+  },
+
+  "global": {
+
+    "banned_words": {
+      "description": "Words flagged and replaced during output validation.",
+      "severity": "fix",
+      "terms": [
+        "leverage", "robust", "holistic", "delve", "comprehensive",
+        "utilize", "facilitate", "streamline", "synergy", "paradigm",
+        "innovative", "cutting-edge", "best-in-class", "actionable",
+        "scalable", "seamless", "empower", "impactful", "transformative",
+        "ecosystem", "bandwidth", "deep dive", "circle back", "touch base",
+        "move the needle", "at the end of the day", "going forward"
+      ]
+    },
+
+    "passive_voice": {
+      "description": "Flag passive constructions and suggest active rewrites.",
+      "severity": "flag",
+      "action": "suggest_active",
+      "threshold_per_paragraph": 1
+    },
+
+    "nominalizations": {
+      "description": "Convert noun-heavy constructions back to verb forms.",
+      "severity": "fix",
+      "examples": {
+        "make a decision": "decide",
+        "provide assistance": "help",
+        "conduct an investigation": "investigate",
+        "reach a conclusion": "conclude",
+        "perform an analysis": "analyze",
+        "give consideration to": "consider",
+        "make an attempt": "try",
+        "take action": "act",
+        "offer a recommendation": "recommend",
+        "issue a statement": "state"
+      }
+    },
+
+    "sentence_length": {
+      "description": "Flag sentences that exceed the max word count.",
+      "severity": "flag",
+      "max_words": 25,
+      "hard_max_words": 35,
+      "action": "split_or_shorten"
+    },
+
+    "paragraph_length": {
+      "description": "Limit paragraph size to preserve readability.",
+      "severity": "flag",
+      "max_sentences": 4,
+      "action": "split"
+    },
+
+    "hedging_language": {
+      "description": "Flag excessive hedging that weakens claims.",
+      "severity": "flag",
+      "terms": [
+        "it could be argued", "it might be said", "one could suggest",
+        "in some ways", "to a certain extent", "it is worth noting",
+        "it is important to note", "needless to say", "as mentioned"
+      ]
+    },
+
+    "fk_target": {
+      "description": "Default Flesch-Kincaid grade level target range.",
+      "min": 6,
+      "max": 10,
+      "action": "flag_if_outside"
+    },
+
+    "no_unsolicited_headers": {
+      "description": "Do not add classification labels, audience tags, date stamps, risk level badges, or document metadata unless they are explicitly provided as variables by the caller.",
+      "severity": "block",
+      "examples_banned": [
+        "Classification: Unclassified",
+        "Audience: Business Travelers",
+        "Risk Level: Low",
+        "Date: April 2026",
+        "TLP:WHITE",
+        "Issued by:",
+        "Prepared for:"
+      ],
+      "note": "If the template or caller provides a date or classification variable, include it. If not provided, omit entirely. Do not invent document metadata."
+    },
+
+    "redundant_phrases": {
+      "description": "Remove filler phrases that add length without meaning.",
+      "severity": "fix",
+      "terms": [
+        "in order to",
+        "due to the fact that",
+        "in the event that",
+        "at this point in time",
+        "for the purpose of",
+        "with regard to",
+        "in terms of",
+        "on a regular basis",
+        "in close proximity to",
+        "in the near future"
+      ],
+      "replacements": {
+        "in order to": "to",
+        "due to the fact that": "because",
+        "in the event that": "if",
+        "at this point in time": "now",
+        "for the purpose of": "to",
+        "on a regular basis": "regularly",
+        "in close proximity to": "near",
+        "in the near future": "soon"
+      }
+    }
+  },
+
+  "domain_overrides": {
+
+    "legal_brief": {
+      "banned_words_exempt": [
+        "indemnify", "liability", "pursuant", "hereinafter",
+        "notwithstanding", "whereas", "affidavit", "injunction"
+      ],
+      "passive_voice": "allow",
+      "fk_target": { "min": 12, "max": 16 },
+      "sentence_length": { "max_words": 40, "hard_max_words": 60 }
+    },
+
+    "medical_report": {
+      "banned_words_exempt": [
+        "facilitate", "utilize", "conduct"
+      ],
+      "passive_voice": "allow",
+      "fk_target": { "min": 10, "max": 14 },
+      "sentence_length": { "max_words": 30, "hard_max_words": 45 }
+    },
+
+    "travel_risk": {
+      "passive_voice": "flag",
+      "fk_target": { "min": 5, "max": 7 },
+      "sentence_length": { "max_words": 18, "hard_max_words": 25 },
+      "paragraph_length": { "max_sentences": 3 }
+    },
+
+    "executive_summary": {
+      "fk_target": { "min": 8, "max": 11 },
+      "sentence_length": { "max_words": 22, "hard_max_words": 30 },
+      "paragraph_length": { "max_sentences": 3 }
+    },
+
+    "technical_documentation": {
+      "passive_voice": "allow",
+      "fk_target": { "min": 10, "max": 14 },
+      "sentence_length": { "max_words": 30, "hard_max_words": 50 },
+      "banned_words_exempt": ["utilize", "facilitate"]
+    },
+
+    "corporate_security_intel": {
+      "fk_target": { "min": 8, "max": 11 },
+      "passive_voice": "flag",
+      "sentence_length": { "max_words": 22, "hard_max_words": 30 },
+      "paragraph_length": { "max_sentences": 4 },
+      "banned_phrases": [
+        "business continuity",
+        "fintech",
+        "it is worth noting",
+        "it is important to note",
+        "needless to say",
+        "it could be argued",
+        "in some ways"
+      ],
+      "certainty_language": {
+        "description": "Replace weak modal verbs with stronger, more direct alternatives.",
+        "severity": "fix",
+        "replacements": {
+          "could": "can",
+          "might impact": "may impact",
+          "would potentially": "will likely"
+        }
+      },
+      "anonymization": {
+        "description": "Do not use personal names. Replace with titles or roles.",
+        "severity": "fix",
+        "action": "replace_name_with_title",
+        "examples": {
+          "John Smith stated": "The Minister stated",
+          "CEO Jane Doe announced": "The CEO announced"
+        }
+      },
+      "objectivity": {
+        "description": "Remove sensationalizing or emotionally charged language.",
+        "severity": "fix",
+        "banned_tone_words": [
+          "catastrophic", "devastating", "shocking", "alarming",
+          "terrifying", "explosive situation", "dire warning"
+        ],
+        "action": "replace_with_neutral"
+      },
+      "evidence_grounding": {
+        "description": "Business Analysis must derive claims from Latest Developments only. No new information in Executive Summary.",
+        "severity": "flag",
+        "sections_affected": ["business_analysis", "executive_summary"]
+      }
+    }
+  },
+
+  "severity_levels": {
+    "description": "How the validator responds to each rule breach.",
+    "fix": "Automatically correct and log the change.",
+    "flag": "Mark for review but do not alter output.",
+    "block": "Halt output and require resolution before returning."
+  },
+
+  "custom_override_path": "dictionary/custom/rules/",
+  "custom_override_note": "Any JSON file in the custom path is deep-merged over this file. Domain keys are merged per-key, not replaced wholesale."
+}

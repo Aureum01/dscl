@@ -1,0 +1,152 @@
+{
+  "_citation": {
+    "sources": [
+      {
+        "name": "Original — DSCL pipeline architecture",
+        "note": "Master sequence file. Order is not arbitrary. Each step depends on the output of the step before it."
+      }
+    ]
+  },
+  "_description": "The master sequence file. Defines the exact order the LLM must process the dictionary layers. No step may be skipped. No step may run before the step that precedes it.",
+  "_rule": "Read this file first. Execute every step in order. Do not generate output until step 13 is complete.",
+  "pipeline": [
+    {
+      "step": 1,
+      "action": "load pipeline",
+      "file": "/system/pipeline.json",
+      "note": "You are here. Continue to step 2."
+    },
+    {
+      "step": 2,
+      "action": "load entry rules",
+      "file": "/system/entry_rules.json",
+      "note": "Establish the three entry facts before anything else: narrative, domain, audience. Do not proceed until all three are resolved or defaulted.",
+      "depends_on": null,
+      "outputs": ["narrative", "domain", "audience"]
+    },
+    {
+      "step": 3,
+      "action": "detect domain and retrieve register ceiling and FK target",
+      "file": "/context/domain_register.json",
+      "note": "Use the domain from step 2 to retrieve FK floor, FK ceiling, and register ceiling. If domain not found, use general_default.",
+      "depends_on": ["domain"],
+      "outputs": ["fk_floor", "fk_ceiling", "register_ceiling"]
+    },
+    {
+      "step": 4,
+      "action": "assign register ceiling",
+      "file": "/context/register_tags.json",
+      "note": "Load register definitions. No word above the register ceiling from step 3 may be used. ai_signature words are always blocked regardless of ceiling.",
+      "depends_on": ["register_ceiling"],
+      "outputs": ["register_map", "blocked_words"]
+    },
+    {
+      "step": 5,
+      "action": "select vocabulary",
+      "files": [
+        "/vocabulary/primary_vocab.json",
+        "/vocabulary/fallback_vocab.json",
+        "/vocabulary/domain_exceptions.json"
+      ],
+      "note": "Check primary_vocab first. If no primary word carries the precise meaning, check fallback_vocab. If no fallback word qualifies, check domain_exceptions — only if domain tag matches. If no match anywhere, use shortest common English word that carries the meaning.",
+      "selection_order": [
+        "1. primary_vocab.json",
+        "2. fallback_vocab.json",
+        "3. domain_exceptions.json (domain match required)",
+        "4. shortest common English word"
+      ],
+      "depends_on": ["register_ceiling", "register_map", "blocked_words"],
+      "outputs": ["selected_words"]
+    },
+    {
+      "step": 6,
+      "action": "check syllable load",
+      "file": "/readability/syllable_load.json",
+      "note": "Prefer 1-2 syllable words. Three or more polysyllabic words in sequence triggers a rewrite. This is the secondary FK driver.",
+      "depends_on": ["selected_words"],
+      "outputs": ["syllable_check"]
+    },
+    {
+      "step": 7,
+      "action": "check grade target",
+      "file": "/readability/grade_targets.json",
+      "note": "Confirm output is being composed within the FK target from step 3. This is a composition constraint — adjust sentence structure and word choice now, not after output is assembled.",
+      "depends_on": ["fk_floor", "fk_ceiling", "syllable_check"],
+      "outputs": ["grade_constraint"]
+    },
+    {
+      "step": 8,
+      "action": "apply grammar rules",
+      "files": [
+        "/grammar/voice_rules.json",
+        "/grammar/verb_placement.json",
+        "/grammar/modifier_rules.json",
+        "/grammar/nominalization_blocklist.json"
+      ],
+      "note": "Apply in order. Voice first — resolves most passive chain and nominalization conflicts automatically. Verb placement second. Modifiers third. Nominalization blocklist fourth.",
+      "application_order": [
+        "1. voice_rules.json — active voice default, passive conditions",
+        "2. verb_placement.json — verb follows subject within 5 words",
+        "3. modifier_rules.json — one adjective per noun, intensifiers blocked",
+        "4. nominalization_blocklist.json — replace verb-noun constructions with direct verbs"
+      ],
+      "depends_on": ["selected_words", "grade_constraint"],
+      "outputs": ["grammar_checked_words"]
+    },
+    {
+      "step": 9,
+      "action": "apply syntax rules",
+      "files": [
+        "/syntax/sentence_structure.json",
+        "/syntax/clause_rules.json",
+        "/syntax/punctuation_function.json"
+      ],
+      "note": "Build sentences. Subject leads. Main point in main clause. Introductory clauses capped at 6 words. Punctuation is structural — not decorative.",
+      "depends_on": ["grammar_checked_words"],
+      "outputs": ["constructed_sentences"]
+    },
+    {
+      "step": 10,
+      "action": "apply paragraph rules",
+      "file": "/syntax/paragraph_structure.json",
+      "note": "Topic sentence leads every paragraph. One idea per paragraph. Group constructed sentences into paragraphs now.",
+      "depends_on": ["constructed_sentences"],
+      "outputs": ["constructed_paragraphs"]
+    },
+    {
+      "step": 11,
+      "action": "check sentence length",
+      "file": "/readability/sentence_length.json",
+      "note": "Verify average sentence length is within target. Hard ceiling 35 words. Check for monotone length — short must follow long. Rewrite any sentence above the hard ceiling.",
+      "depends_on": ["constructed_sentences"],
+      "outputs": ["length_verified_sentences"]
+    },
+    {
+      "step": 12,
+      "action": "resolve conflicts",
+      "file": "/meta/conflict_resolution.json",
+      "note": "If any two rules produced incompatible outputs in steps 5-11, resolve them now using the five-level hierarchy. Tiebreaker is shorter sentence.",
+      "depends_on": ["constructed_paragraphs", "length_verified_sentences"],
+      "outputs": ["resolved_output"]
+    },
+    {
+      "step": 13,
+      "action": "apply weight logic",
+      "file": "/meta/weight_definitions.json",
+      "note": "Verify all hard rules have been respected. Log any soft rule exceptions. Contextual rules apply only where domain tag is active.",
+      "depends_on": ["resolved_output"],
+      "outputs": ["weighted_output"]
+    },
+    {
+      "step": 14,
+      "action": "assemble page",
+      "file": null,
+      "note": "Combine weighted_output into final page. No further rule checks. Output is ready.",
+      "depends_on": ["weighted_output"],
+      "outputs": ["final_output"]
+    }
+  ],
+  "defaults_file": "/system/defaults.json",
+  "defaults_consulted_when": "Any step returns no result or encounters an unresolvable conflict",
+  "hard_rule": "No step may be skipped. Steps execute in order 1 through 14. Output is not assembled until step 14."
+}

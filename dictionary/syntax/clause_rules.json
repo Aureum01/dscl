@@ -1,0 +1,176 @@
+{
+  "_citation": {
+    "sources": [
+      {
+        "name": "Strunk & White, Elements of Style — Rules 3, 4, 5",
+        "url": "https://www.gutenberg.org/ebooks/37134",
+        "note": "Public domain. Comma before coordinating conjunction. No comma splice. Parenthetic expressions enclosed between commas."
+      },
+      {
+        "name": "Plain Language Act 2010",
+        "url": "https://www.plainlanguage.gov",
+        "note": "Introductory clauses capped for plain language compliance. Actor before consequence."
+      },
+      {
+        "name": "Purdue OWL — Verb Tense Consistency",
+        "url": "https://owl.purdue.edu/owl/general_writing/grammar/verb_tenses/verb_tense_consistency.html",
+        "note": "Do not shift tense within the same time frame. Shift only when time frame genuinely changes. Perfect tenses for earlier actions relative to primary narrative tense."
+      },
+      {
+        "name": "Purdue OWL — Relative Pronouns: Introduction and General Usage in Defining Clauses",
+        "url": "https://owl.purdue.edu/owl/general_writing/grammar/relative_pronouns/index.html",
+        "note": "That for restrictive clauses. Which for non-restrictive. Who as subject, whom as object. Whose for possessives of people and things. Who preferred over that for people in formal output."
+      }
+    ]
+  },
+  "_description": "Rules governing what sits before and after punctuation in clause construction. Comma function defined structurally. Introductory clauses capped at 6 words or split. Actor before comma. Consequence after comma.",
+  "_pipeline_step": 9,
+  "_pipeline_substep": 2,
+  "rules": [
+    {
+      "rule_id": "CL_01",
+      "rule": "Introductory clauses must be 6 words or fewer. If longer, split into a separate sentence or restructure.",
+      "weight": "hard",
+      "rationale": "A long introductory clause delays the subject and verb, the two elements the reader needs first. Cap it at 6 words or move it.",
+      "example_correct": "After the flood, teams began recovery work.",
+      "example_incorrect": "After the flood had subsided and emergency services had confirmed the area was safe, teams began recovery work.",
+      "fix": "Split the long intro into its own sentence. Then state the main clause.",
+      "word_limit": 6,
+      "violation_type": "long_introductory_clause",
+      "source": "Plain Language Act 2010"
+    },
+    {
+      "rule_id": "CL_02",
+      "rule": "Actor before comma. Consequence after comma.",
+      "weight": "soft",
+      "rationale": "In cause-effect sentences, the actor or cause belongs in the first clause. The consequence or result belongs after the comma. This order mirrors how events unfold and is easier to process.",
+      "example_correct": "The bridge collapsed, blocking the main supply route.",
+      "example_incorrect": "Blocking the main supply route, the bridge collapsed.",
+      "violation_type": "consequence_before_actor",
+      "source": "Plain Language Act 2010"
+    },
+    {
+      "rule_id": "CL_03",
+      "rule": "Place a comma before a conjunction introducing a coordinate clause.",
+      "weight": "hard",
+      "rationale": "When two independent clauses are joined by and, but, or, nor, for, so, or yet, a comma before the conjunction signals the boundary between the two clauses.",
+      "example_correct": "The road is open, but conditions are poor.",
+      "example_incorrect": "The road is open but conditions are poor.",
+      "coordinating_conjunctions": ["and", "but", "or", "nor", "for", "so", "yet"],
+      "violation_type": "missing_comma_before_conjunction",
+      "source": "Strunk & White Rule 4"
+    },
+    {
+      "rule_id": "CL_04",
+      "rule": "Enclose parenthetic expressions between commas.",
+      "weight": "hard",
+      "rationale": "A parenthetic expression — an interruption that adds information without being essential — must be set off by commas on both sides. One comma without the other is not acceptable.",
+      "example_correct": "The convoy, delayed by weather, arrived at 0800.",
+      "example_incorrect": "The convoy, delayed by weather arrived at 0800.",
+      "note": "If the expression comes at the end of the sentence, use comma then period.",
+      "violation_type": "unbalanced_parenthetic_commas",
+      "source": "Strunk & White Rule 3"
+    },
+    {
+      "rule_id": "CL_05",
+      "rule": "Do not join independent clauses with a comma alone.",
+      "weight": "hard",
+      "rationale": "Two independent clauses require either a semicolon, a coordinating conjunction with a comma, or a period between them. A comma alone creates a comma splice.",
+      "example_correct": "The checkpoint was closed. No vehicles were permitted through.",
+      "example_correct_alt": "The checkpoint was closed; no vehicles were permitted through.",
+      "example_incorrect": "The checkpoint was closed, no vehicles were permitted through.",
+      "violation_type": "comma_splice",
+      "source": "Strunk & White Rule 5"
+    },
+    {
+      "rule_id": "CL_06",
+      "rule": "Use a semicolon between two independent clauses when no conjunction is present.",
+      "weight": "hard",
+      "rationale": "A semicolon signals that two clauses are closely related without subordinating one to the other. It is stronger than a comma and weaker than a period.",
+      "example_correct": "The northern route is faster; the southern route is safer.",
+      "example_incorrect": "The northern route is faster, the southern route is safer.",
+      "note": "Do not use a semicolon before a coordinating conjunction. Use a comma instead.",
+      "violation_type": "comma_where_semicolon_required",
+      "source": "Strunk & White Rule 5"
+    },
+    {
+      "rule_id": "CL_07",
+      "rule": "Subordinate clauses must not carry the main point of the sentence.",
+      "weight": "hard",
+      "rationale": "A subordinate clause is by definition secondary. If the most important information is in the subordinate clause, restructure so it becomes the main clause.",
+      "example_correct": "The road was mined, which delayed the convoy by six hours.",
+      "example_incorrect": "Although the road was mined and the convoy was delayed by six hours, operations continued.",
+      "fix": "Promote the most important fact to the independent main clause.",
+      "violation_type": "main_point_in_subordinate_clause",
+      "source": "Plain Language Act 2010"
+    },
+    {
+      "rule_id": "CL_08",
+      "rule": "Relative clauses must follow their antecedent immediately.",
+      "weight": "soft",
+      "rationale": "A relative clause placed away from its antecedent creates ambiguity about which noun it modifies.",
+      "example_correct": "He published three articles about his work in Spain, which appeared in major journals.",
+      "example_incorrect": "He published three articles, which appeared in major journals, about his work in Spain.",
+      "violation_type": "misplaced_relative_clause",
+      "source": "Strunk & White Rule 16"
+    },
+    {
+      "rule_id": "CL_09",
+      "rule": "Use that for restrictive clauses. Use which for non-restrictive clauses. Use who or whom for people.",
+      "weight": "soft",
+      "rationale": "That introduces a restrictive clause — essential information, no comma. Which introduces a non-restrictive clause — added information, comma required. Who and whom are used for people in formal output, not that.",
+      "examples": {
+        "restrictive_thing": "The road that was mined is now clear.",
+        "nonrestrictive_thing": "The main road, which runs north to south, is now clear.",
+        "people_formal": "The officer who filed the report is available.",
+        "incorrect_which_restrictive": "The road which was mined is now clear.",
+        "incorrect_that_for_people_formal": "The officer that filed the report is available."
+      },
+      "notes": [
+        "that may refer to people in informal speech but who is preferred in all DSCL formal output",
+        "which is always preferred over that in non-restrictive clauses",
+        "whose is the possessive form and applies to both people and things"
+      ],
+      "violation_type": "relative_pronoun_mismatch",
+      "source": "Purdue OWL — Relative Pronouns: https://owl.purdue.edu/owl/general_writing/grammar/relative_pronouns/index.html"
+    },
+    {
+      "rule_id": "CL_10",
+      "rule": "Use who as subject of a relative clause. Use whom as object of a verb or preposition.",
+      "weight": "soft",
+      "rationale": "Who performs the action in the clause. Whom receives the action or follows a preposition. In formal DSCL output, whom must not be omitted after a preposition.",
+      "example_correct_subject": "The officer who filed the report is available.",
+      "example_correct_object": "The delegate to whom the message was sent has not replied.",
+      "example_incorrect": "The delegate to who the message was sent has not replied.",
+      "test": "If he/she fits, use who. If him/her fits, use whom.",
+      "violation_type": "who_whom_confusion",
+      "source": "Purdue OWL — Relative Pronouns: https://owl.purdue.edu/owl/general_writing/grammar/relative_pronouns/index.html"
+    },
+    {
+      "rule_id": "CL_11",
+      "rule": "Do not shift tense within a sentence or paragraph when the time frame has not changed.",
+      "weight": "hard",
+      "rationale": "Unnecessary tense shifts within the same time frame create confusion about when events occurred. Establish one primary tense and hold it throughout unless the time frame genuinely changes.",
+      "example_correct": "The convoy left the checkpoint at 0600 and arrived at the destination by 0900.",
+      "example_incorrect": "The convoy left the checkpoint at 0600 and arrives at the destination by 0900.",
+      "violation_type": "inconsistent_tense_same_timeframe",
+      "source": "Purdue OWL — Verb Tense Consistency: https://owl.purdue.edu/owl/general_writing/grammar/verb_tenses/verb_tense_consistency.html"
+    },
+    {
+      "rule_id": "CL_12",
+      "rule": "Shift tense only when the time frame of the action genuinely changes.",
+      "weight": "soft",
+      "rationale": "When one action precedes another in real time, tense must shift to reflect that relationship. Past perfect is used for action completed before the primary past narrative. Present perfect is used for action completed before the primary present narrative.",
+      "example_correct": "The bridge was already closed when the convoy arrived.",
+      "example_correct_perfect": "By the time the team reached the site, engineers had already assessed the damage.",
+      "example_incorrect": "The bridge was already closed when the convoy arrives.",
+      "tense_relationships": {
+        "past_primary_earlier_action": "past perfect — had + past participle",
+        "present_primary_earlier_action": "present perfect — has/have + past participle",
+        "future_primary_earlier_action": "future perfect — will have + past participle"
+      },
+      "violation_type": "missing_tense_shift_on_timeframe_change",
+      "source": "Purdue OWL — Verb Tense Consistency: https://owl.purdue.edu/owl/general_writing/grammar/verb_tenses/verb_tense_consistency.html"
+    }
+  ]
+}

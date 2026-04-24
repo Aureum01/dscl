@@ -1,0 +1,98 @@
+{
+  "_citation": {
+    "sources": [
+      {
+        "name": "Original — DSCL boundary definition",
+        "note": "Scope is an architectural constraint, not sourced from an external standard. It defines what the dictionary is and is not responsible for."
+      }
+    ]
+  },
+  "_description": "Defines explicitly what the /dictionary controls and what it does not control. This file exists to prevent scope creep — the pipeline must not attempt to control anything listed under does_not_control.",
+  "_pipeline_step": "reference — consulted when pipeline behaviour is ambiguous",
+  "controls": {
+    "description": "Everything in this list is the pipeline's responsibility. Rules exist for each item. The pipeline must enforce them.",
+    "items": [
+      {
+        "item": "word_selection",
+        "detail": "Which word is chosen to carry meaning. Primary vocab first, fallback second, domain exceptions third."
+      },
+      {
+        "item": "word_selection_order",
+        "detail": "The sequence in which vocab tiers are checked. primary → fallback → domain_exceptions → shortest common word."
+      },
+      {
+        "item": "sentence_construction",
+        "detail": "How a sentence is built. Subject leads. Verb follows within 5 words. Main point in main clause."
+      },
+      {
+        "item": "sentence_length",
+        "detail": "Average 15-20 words for general output. Hard ceiling 35 words. Variety required — short follows long."
+      },
+      {
+        "item": "paragraph_structure",
+        "detail": "Topic sentence leads. One idea per paragraph. 3-6 sentences general, 2-3 sentences crisis."
+      },
+      {
+        "item": "voice",
+        "detail": "Active voice default. Passive permitted only when actor is unknown, irrelevant, or deliberately withheld."
+      },
+      {
+        "item": "modifier_economy",
+        "detail": "One adjective per noun. Intensifiers blocked. Adverbs modifying said or stated blocked."
+      },
+      {
+        "item": "nominalization",
+        "detail": "Verb-to-noun constructions blocked. Replace with direct verb per nominalization_blocklist.json."
+      },
+      {
+        "item": "readability_grade",
+        "detail": "FK grade target enforced per domain. Composition constraint — not a post-hoc scoring tool."
+      },
+      {
+        "item": "conflict_resolution",
+        "detail": "When two rules produce incompatible output, conflict_resolution.json defines which wins."
+      },
+      {
+        "item": "register_ceiling",
+        "detail": "No word above the domain register ceiling appears in output unless domain_exceptions.json permits it."
+      },
+      {
+        "item": "ai_signature_words",
+        "detail": "Always blocked regardless of domain. No exceptions."
+      }
+    ]
+  },
+  "does_not_control": {
+    "description": "Everything in this list is outside the pipeline's responsibility. The pipeline must not attempt to modify, correct, or override these.",
+    "items": [
+      {
+        "item": "narrative",
+        "detail": "The meaning, intent, and facts are the user's input. The pipeline represents them — it does not change them."
+      },
+      {
+        "item": "factual_accuracy",
+        "detail": "The pipeline does not verify, correct, or add facts. What the user provides is what the output contains."
+      },
+      {
+        "item": "claims",
+        "detail": "The pipeline does not assess whether claims are true, reasonable, or appropriate."
+      },
+      {
+        "item": "tone_beyond_register",
+        "detail": "Emotional tone, empathy, warmth, or formality beyond what register_tags.json defines is not controlled here."
+      },
+      {
+        "item": "formatting",
+        "detail": "Headers, bullets, tables, layout, indentation, font — all outside scope. The pipeline controls language, not presentation."
+      },
+      {
+        "item": "language_other_than_english",
+        "detail": "All rules, vocabulary, and readability targets apply to English only. No other language is in scope."
+      },
+      {
+        "item": "content_decisions",
+        "detail": "What to include or exclude from the output is the user's decision. The pipeline only controls how included content is expressed."
+      }
+    ]
+  }
+}

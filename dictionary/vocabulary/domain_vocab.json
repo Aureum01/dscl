@@ -1,0 +1,193 @@
+{
+  "_readme": {
+    "what_this_file_is": "Preferred vocabulary lists per domain. These are the recommended terms writers and models should reach for first when composing in a specific domain. Distinct from domain_exceptions.json which only permits out-of-vocab words through the validator.",
+    "how_to_use": "When writing in a domain, prefer words from this list before reaching for alternatives. These terms are precise, widely understood within the field, and frequency-grounded where possible.",
+    "note": "This file is intentionally customisable. Add new domains as needed by creating a new key matching the domain name and listing preferred terms as a lowercase array."
+  },
+
+  "general": [
+    "clear", "brief", "direct", "simple", "plain", "accurate",
+    "complete", "relevant", "concise", "specific", "objective",
+    "explain", "describe", "state", "define", "outline", "list",
+    "note", "confirm", "show", "tell", "use", "apply", "follow"
+  ],
+
+  "plain_summary": [
+    "summary", "overview", "key", "main", "point", "means",
+    "says", "states", "allows", "requires", "prevents", "ends",
+    "starts", "covers", "applies", "affects", "includes", "excludes",
+    "short", "simple", "plain", "basic", "common", "standard"
+  ],
+
+  "instruction": [
+    "step", "first", "next", "then", "finally", "before", "after",
+    "open", "click", "select", "enter", "press", "choose", "confirm",
+    "save", "close", "install", "run", "check", "set", "enable",
+    "disable", "restart", "update", "download", "upload", "connect"
+  ],
+
+  "assessment": [
+    "assess", "evaluate", "review", "measure", "compare", "identify",
+    "find", "note", "record", "rate", "rank", "score", "test",
+    "examine", "inspect", "analyse", "report", "recommend", "conclude",
+    "criteria", "standard", "baseline", "benchmark", "finding", "gap"
+  ],
+
+  "correspondence": [
+    "write", "send", "reply", "confirm", "request", "inform", "advise",
+    "attach", "enclose", "follow", "up", "refer", "note", "acknowledge",
+    "thank", "apologise", "clarify", "update", "arrange", "discuss",
+    "meeting", "call", "deadline", "action", "response", "contact"
+  ],
+
+  "legal_contract": [
+    "agreement", "contract", "clause", "term", "condition", "party",
+    "obligation", "right", "breach", "remedy", "enforce", "terminate",
+    "liability", "warrant", "represent", "govern", "dispute", "settle",
+    "jurisdiction", "arbitration", "notice", "consent", "assign",
+    "indemnify", "waive", "execute", "bind", "valid", "void", "sign"
+  ],
+
+  "medical": [
+    "patient", "condition", "symptom", "diagnose", "treat", "assess",
+    "monitor", "record", "report", "refer", "prescribe", "dose",
+    "review", "follow", "up", "admit", "discharge", "stable", "acute",
+    "chronic", "clinical", "procedure", "result", "test", "screen",
+    "history", "allergy", "risk", "care", "plan", "note", "alert"
+  ],
+
+  "medical_patient": [
+    "take", "use", "avoid", "eat", "drink", "rest", "call", "visit",
+    "tell", "ask", "feel", "pain", "side", "effect", "dose", "tablet",
+    "morning", "night", "daily", "week", "stop", "start", "return",
+    "better", "worse", "normal", "usual", "help", "safe", "careful"
+  ],
+
+  "technical_reference": [
+    "function", "method", "call", "return", "parameter", "value",
+    "type", "string", "integer", "boolean", "array", "object", "null",
+    "error", "request", "response", "endpoint", "api", "token",
+    "key", "header", "body", "status", "code", "version", "schema",
+    "required", "optional", "default", "example", "output", "input"
+  ],
+
+  "software_documentation": [
+    "install", "configure", "run", "build", "deploy", "test", "debug",
+    "import", "export", "read", "write", "connect", "authenticate",
+    "log", "error", "warning", "output", "input", "file", "path",
+    "variable", "environment", "setting", "option", "flag", "command",
+    "package", "module", "library", "dependency", "version", "release"
+  ],
+
+  "data_analysis": [
+    "data", "result", "value", "range", "average", "total", "count",
+    "percent", "rate", "trend", "increase", "decrease", "compare",
+    "filter", "sort", "group", "measure", "chart", "table", "row",
+    "column", "field", "source", "sample", "set", "output", "query",
+    "null", "missing", "valid", "clean", "format", "export", "load"
+  ],
+
+  "financial": [
+    "cost", "price", "fee", "rate", "total", "budget", "spend",
+    "save", "invest", "return", "profit", "loss", "revenue", "income",
+    "expense", "tax", "pay", "charge", "bill", "account", "balance",
+    "period", "quarter", "year", "forecast", "actual", "variance",
+    "approve", "allocate", "report", "audit", "review", "reconcile"
+  ],
+
+  "procurement": [
+    "procure", "source", "tender", "bid", "quote", "supplier",
+    "vendor", "contract", "purchase", "order", "deliver", "receive",
+    "inspect", "approve", "reject", "invoice", "pay", "renew",
+    "evaluate", "select", "award", "negotiate", "price", "term",
+    "condition", "scope", "require", "specify", "comply", "audit"
+  ],
+
+  "project_management": [
+    "plan", "scope", "task", "milestone", "deadline", "deliver",
+    "track", "update", "report", "review", "risk", "issue", "action",
+    "owner", "priority", "status", "complete", "block", "delay",
+    "budget", "resource", "schedule", "phase", "close", "approve",
+    "change", "request", "log", "meeting", "decision", "output"
+  ],
+
+  "human_resources": [
+    "role", "position", "hire", "recruit", "onboard", "train",
+    "review", "perform", "manage", "support", "develop", "promote",
+    "leave", "absence", "policy", "conduct", "discipline", "grievance",
+    "benefit", "pay", "contract", "term", "condition", "end", "resign",
+    "retire", "refer", "record", "confidential", "consent", "process"
+  ],
+
+  "protective_security": [
+    "threat", "risk", "assess", "monitor", "detect", "respond",
+    "incident", "breach", "vulnerability", "exposure", "mitigate",
+    "protocol", "access", "control", "perimeter", "surveillance",
+    "credible", "imminent", "hostile", "target", "pattern", "alert",
+    "secure", "restrict", "screen", "verify", "log", "report", "brief"
+  ],
+
+  "travel_risk": [
+    "assess", "threat", "advisory", "movement", "route", "avoid",
+    "caution", "restrict", "curfew", "checkpoint", "evacuate",
+    "contact", "embassy", "register", "monitor", "situation",
+    "stable", "volatile", "deteriorating", "heightened", "area",
+    "border", "crossing", "permit", "document", "emergency", "brief"
+  ],
+
+  "intelligence_report": [
+    "assess", "indicate", "suggest", "confirm", "unconfirmed",
+    "source", "credible", "reliable", "probable", "possible",
+    "activity", "pattern", "network", "operation", "objective",
+    "capability", "intent", "timeframe", "target", "report",
+    "observe", "note", "record", "track", "monitor", "analyse",
+    "conclude", "likely", "unlikely", "unknown", "ongoing", "recent"
+  ],
+
+  "crisis_communication": [
+    "confirm", "update", "advise", "act", "avoid", "move", "stay",
+    "contact", "follow", "instruct", "report", "locate", "secure",
+    "evacuate", "shelter", "assist", "call", "urgent", "immediate",
+    "critical", "serious", "safe", "clear", "proceed", "hold", "wait"
+  ],
+
+  "policy_document": [
+    "policy", "purpose", "scope", "apply", "require", "must",
+    "shall", "may", "prohibit", "permit", "define", "describe",
+    "govern", "enforce", "review", "update", "approve", "comply",
+    "report", "escalate", "responsibility", "accountable", "breach",
+    "consequence", "procedure", "process", "standard", "guideline"
+  ],
+
+  "scientific": [
+    "study", "research", "find", "result", "data", "sample", "test",
+    "measure", "observe", "record", "analyse", "compare", "control",
+    "variable", "method", "process", "model", "theory", "evidence",
+    "support", "confirm", "reject", "significant", "consistent",
+    "indicate", "suggest", "conclude", "limit", "further", "review"
+  ],
+
+  "environmental": [
+    "impact", "assess", "risk", "measure", "reduce", "monitor",
+    "report", "comply", "permit", "waste", "emission", "discharge",
+    "land", "water", "air", "species", "habitat", "protect", "restore",
+    "manage", "plan", "review", "audit", "standard", "threshold",
+    "exceed", "mitigate", "offset", "record", "inspect", "remediate"
+  ],
+
+  "education": [
+    "learn", "teach", "explain", "describe", "show", "practise",
+    "review", "assess", "test", "improve", "understand", "apply",
+    "read", "write", "complete", "submit", "discuss", "ask", "answer",
+    "goal", "outcome", "skill", "knowledge", "level", "progress",
+    "feedback", "support", "resource", "activity", "task", "session"
+  ],
+
+  "customer_service": [
+    "help", "assist", "resolve", "respond", "contact", "follow",
+    "up", "confirm", "update", "apologise", "explain", "arrange",
+    "refund", "replace", "escalate", "log", "record", "track",
+    "priority", "urgent", "standard", "close", "reopen", "feedback",
+    "satisfy", "deliver", "promise", "expect", "request", "issue"
+  ]
+}

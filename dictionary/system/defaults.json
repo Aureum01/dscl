@@ -1,0 +1,86 @@
+{
+  "_citation": {
+    "sources": [
+      {
+        "name": "Flesch-Kincaid Grade Level Formula",
+        "url": "https://readable.com/readability/flesch-reading-ease-flesch-kincaid-grade-level",
+        "note": "FK 6-8 established as general-purpose plain language default"
+      },
+      {
+        "name": "Plain Language Act 2010",
+        "url": "https://www.plainlanguage.gov",
+        "note": "Audience-first principle and default readability standard"
+      },
+      {
+        "name": "Strunk & White, Elements of Style",
+        "url": "https://www.gutenberg.org/ebooks/37134",
+        "note": "Active voice and concision as default composition stance"
+      }
+    ]
+  },
+  "_description": "The fallback state for every variable in the system. If domain_register.json returns no match, if a word has no primary_vocab entry, if conflict_resolution.json finds no rule — this file defines what the LLM does next. Every rule file in the pipeline defers here on a miss.",
+  "_pipeline_step": "fallback — consulted any time a rule or lookup returns no result",
+  "defaults": {
+    "domain": {
+      "value": "general_default",
+      "reason": "Safest assumption when domain cannot be detected from input"
+    },
+    "fk_target": {
+      "value": "6-8",
+      "fk_floor": 6,
+      "fk_ceiling": 8,
+      "reason": "Plain Language Act standard for general public documents"
+    },
+    "register_ceiling": {
+      "value": "abstract_general",
+      "reason": "Permits common concepts without requiring domain knowledge"
+    },
+    "voice": {
+      "value": "active",
+      "reason": "Active voice as default per Strunk & White Rule 14 and Plain Language Act"
+    },
+    "sentence_length": {
+      "value": "15-20 words",
+      "average_floor": 15,
+      "average_ceiling": 20,
+      "hard_ceiling": 35,
+      "reason": "Primary FK driver. 15-20 word average produces FK 6-8 when paired with 1-2 syllable words"
+    },
+    "vocab_tier": {
+      "value": "primary",
+      "reason": "Always attempt primary_vocab.json first. Fallback only when primary cannot carry precise meaning"
+    },
+    "weight": {
+      "value": "soft",
+      "reason": "Soft weight allows conflict_resolution.json to permit exceptions. Hard rules never use this default"
+    },
+    "paragraph_length": {
+      "value": "3-6 sentences",
+      "crisis_override": "2-3 sentences",
+      "reason": "One idea per paragraph. New idea means new paragraph regardless of sentence count"
+    },
+    "adjectives_per_noun": {
+      "value": 1,
+      "maximum": 2,
+      "reason": "One adjective per noun by default. Two only if each adds distinct non-overlapping meaning"
+    },
+    "passive_voice_limit": {
+      "value": "permitted only when actor is unknown, irrelevant, or deliberately withheld",
+      "consecutive_passive_limit": 1,
+      "reason": "No two passive constructions in sequence"
+    },
+    "tiebreaker": {
+      "value": "shorter sentence",
+      "reason": "When two valid constructions exist, the shorter one wins"
+    }
+  },
+  "miss_behaviour": {
+    "domain_not_found": "use general_default domain",
+    "word_not_in_primary_vocab": "check fallback_vocab.json",
+    "word_not_in_fallback_vocab": "check domain_exceptions.json",
+    "word_not_in_any_vocab": "use shortest common English word that carries the meaning",
+    "conflict_rule_not_found": "apply tiebreaker — shorter sentence wins",
+    "register_tag_not_found": "treat word as abstract_general",
+    "fk_target_not_found": "use default fk_target 6-8"
+  }
+}

@@ -1,0 +1,130 @@
+{
+  "_citation": {
+    "sources": [
+      {
+        "name": "Strunk & White, Elements of Style — Rule 13: Omit Needless Words",
+        "url": "https://www.gutenberg.org/ebooks/37134",
+        "note": "Public domain. A sentence should contain no unnecessary words. Every modifier must earn its place."
+      },
+      {
+        "name": "Strunk & White, Elements of Style — Rule 12: Use Definite, Specific, Concrete Language",
+        "url": "https://www.gutenberg.org/ebooks/37134",
+        "note": "Prefer the specific to the general. Vague intensifiers replace specific claims with noise."
+      },
+      {
+        "name": "Purdue OWL — Adjective or Adverb",
+        "url": "https://owl.purdue.edu/owl/general_writing/grammar/adjective_or_adverb/index.html",
+        "note": "Adjective and adverb placement and common errors."
+      },
+      {
+        "name": "Purdue OWL — How to Use Adjectives and Adverbs",
+        "url": "https://owl.purdue.edu/owl/general_writing/grammar/how_to_use_adjectives_and_adverbs/index.html",
+        "note": "Adjective economy and adverb necessity."
+      }
+    ]
+  },
+  "_description": "One adjective per noun by default. Two only if each adds distinct non-overlapping meaning. Adverbs modifying said or stated are blocked. Intensifiers with no precise meaning are deleted.",
+  "_pipeline_step": 8,
+  "_pipeline_substep": 3,
+  "rules": [
+    {
+      "rule_id": "MR_01",
+      "rule": "Use one adjective per noun by default.",
+      "weight": "soft",
+      "rationale": "A single precise adjective carries more weight than two vague ones. Multiple adjectives often signal that none of them is doing its job.",
+      "example_correct": "A damaged bridge blocked the main road.",
+      "example_incorrect": "A badly damaged, severely compromised bridge blocked the main road.",
+      "violation_type": "adjective_stacking",
+      "source": "Strunk & White Rule 13"
+    },
+    {
+      "rule_id": "MR_02",
+      "rule": "Two adjectives are permitted only if each adds distinct, non-overlapping meaning.",
+      "weight": "soft",
+      "rationale": "Two adjectives that describe different attributes of the noun — one structural, one evaluative — are justified. Two adjectives that say the same thing in different words are redundant.",
+      "example_correct": "A long, narrow corridor connected the two buildings.",
+      "example_incorrect": "A long, extended corridor connected the two buildings.",
+      "note": "long and narrow are distinct attributes. long and extended are the same attribute restated.",
+      "violation_type": "redundant_adjective_pair",
+      "source": "Strunk & White Rule 13"
+    },
+    {
+      "rule_id": "MR_03",
+      "rule": "Adverbs modifying said or stated are blocked.",
+      "weight": "hard",
+      "rationale": "Said and stated are neutral attribution verbs. Modifying them with adverbs — firmly stated, clearly said, openly declared — editorializes without adding factual content.",
+      "blocked_adverb_verb_pairs": [
+        "firmly said", "firmly stated", "clearly said", "clearly stated",
+        "openly said", "openly stated", "boldly said", "boldly stated",
+        "strongly said", "strongly stated", "simply said", "simply stated"
+      ],
+      "example_correct": "The minister said the border would remain closed.",
+      "example_incorrect": "The minister firmly stated that the border would remain closed.",
+      "violation_type": "adverb_modifying_attribution_verb",
+      "source": "Strunk & White Rule 13 — omit needless words"
+    },
+    {
+      "rule_id": "MR_04",
+      "rule": "Delete intensifiers that carry no precise meaning.",
+      "weight": "hard",
+      "rationale": "Intensifiers like very, extremely, highly, incredibly, and particularly claim to strengthen the word they modify but do not. They add syllables without adding information. Delete them and use a stronger word if emphasis is needed.",
+      "blocked_intensifiers": [
+        "very", "extremely", "highly", "incredibly", "particularly",
+        "remarkably", "exceptionally", "absolutely", "utterly", "totally",
+        "completely", "really", "truly", "certainly", "definitely",
+        "obviously", "clearly", "basically", "essentially", "literally"
+      ],
+      "example_correct": "The situation is dangerous.",
+      "example_incorrect": "The situation is extremely dangerous.",
+      "fix": "Delete the intensifier. If emphasis is genuinely needed, replace the adjective with a stronger one.",
+      "violation_type": "meaningless_intensifier",
+      "source": "Strunk & White Rule 13 — very: use sparingly. Use words strong in themselves."
+    },
+    {
+      "rule_id": "MR_05",
+      "rule": "Place modifiers next to the word they modify.",
+      "weight": "hard",
+      "rationale": "A modifier placed away from its target word creates ambiguity. The reader cannot tell which word is being modified.",
+      "example_correct": "He found only two errors.",
+      "example_incorrect": "He only found two errors.",
+      "violation_type": "misplaced_modifier",
+      "source": "Strunk & White Rule 16 — keep related words together"
+    },
+    {
+      "rule_id": "MR_06",
+      "rule": "Do not use not as an evasion. Use a direct positive or negative word.",
+      "weight": "soft",
+      "rationale": "Negative constructions with not are weaker than direct positive or negative statements. The reader is told what something is not — not what it is.",
+      "example_correct": "He came late.",
+      "example_incorrect": "He was not very often on time.",
+      "replacements": {
+        "not honest": "dishonest",
+        "not important": "trifling",
+        "did not remember": "forgot",
+        "did not pay attention to": "ignored",
+        "did not have confidence in": "distrusted",
+        "not effective": "weak",
+        "not clear": "unclear",
+        "not safe": "dangerous"
+      },
+      "violation_type": "evasive_negative",
+      "source": "Strunk & White Rule 11 — put statements in positive form"
+    },
+    {
+      "rule_id": "MR_07",
+      "rule": "Do not use vague adjectives as filler. Name the specific quality.",
+      "weight": "soft",
+      "rationale": "Adjectives like interesting, significant, important, and relevant announce that something matters without saying why. Replace with the specific claim.",
+      "blocked_vague_adjectives": [
+        "interesting", "significant", "important", "relevant", "notable",
+        "meaningful", "impactful", "powerful", "critical", "key",
+        "major", "minor", "various", "certain", "specific"
+      ],
+      "example_correct": "Three checkpoints were unmanned during the night shift.",
+      "example_incorrect": "There were significant issues with checkpoint coverage during the night shift.",
+      "fix": "Name what is interesting, significant, or important. Do not label it.",
+      "violation_type": "vague_filler_adjective",
+      "source": "Strunk & White Rule 12 — use definite, specific, concrete language"
+    }
+  ]
+}

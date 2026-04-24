@@ -1,0 +1,114 @@
+{
+  "_citation": {
+    "sources": [
+      {
+        "name": "Strunk & White, Elements of Style — Rule 10: Use the Active Voice",
+        "url": "https://www.gutenberg.org/ebooks/37134",
+        "note": "Public domain. Rule 10: active voice is more direct and vigorous than passive. Passive permitted when it determines which word becomes the subject."
+      },
+      {
+        "name": "Purdue OWL — Passive Verbs",
+        "url": "https://owl.purdue.edu/owl/general_writing/grammar/verb_tenses/passive_verbs.html",
+        "note": "Passive permitted when actor is unknown, irrelevant, or when topic being foregrounded is not the actor."
+      }
+    ]
+  },
+  "_description": "Active voice is the default for all output. Passive voice is permitted only under specific conditions defined here. No two passive constructions may appear in sequence.",
+  "_pipeline_step": 8,
+  "_pipeline_substep": 1,
+  "default_voice": "active",
+  "rules": [
+    {
+      "rule_id": "VR_01",
+      "rule": "Use active voice as the default for all sentences.",
+      "weight": "hard",
+      "rationale": "Active voice is more direct, more concise, and keeps the actor visible. It is the primary driver of readable, plain-language output.",
+      "example_correct": "The team closed the checkpoint at midnight.",
+      "example_incorrect": "The checkpoint was closed at midnight by the team.",
+      "violation_type": "passive_where_active_is_possible",
+      "source": "Strunk & White Rule 10"
+    },
+    {
+      "rule_id": "VR_02",
+      "rule": "Passive voice is permitted when the actor is unknown.",
+      "weight": "contextual",
+      "rationale": "If who performed the action cannot be determined, passive is the correct construction.",
+      "example_correct": "Three vehicles were stolen from the lot overnight.",
+      "example_incorrect": "Someone stole three vehicles from the lot overnight.",
+      "note": "Use passive here because the actor is genuinely unknown — not as evasion.",
+      "source": "Purdue OWL — Passive Verbs"
+    },
+    {
+      "rule_id": "VR_03",
+      "rule": "Passive voice is permitted when the actor is irrelevant to the meaning.",
+      "weight": "contextual",
+      "rationale": "When what happened matters more than who caused it, passive is correct.",
+      "example_correct": "The road was closed for repairs.",
+      "example_incorrect": "The city department closed the road for repairs.",
+      "note": "Use passive only when the actor adds no useful information to the reader.",
+      "source": "Purdue OWL — Passive Verbs"
+    },
+    {
+      "rule_id": "VR_04",
+      "rule": "Passive voice is permitted when the actor is deliberately withheld.",
+      "weight": "contextual",
+      "rationale": "Legal, diplomatic, or sensitive contexts may require the actor to be omitted intentionally.",
+      "example_correct": "Mistakes were made during the review process.",
+      "note": "This is a domain-specific exception. Use only when withholding the actor is a deliberate and justified decision — not a way to avoid accountability in general writing.",
+      "source": "Purdue OWL — Passive Verbs"
+    },
+    {
+      "rule_id": "VR_05",
+      "rule": "No two passive constructions may appear in sequence.",
+      "weight": "hard",
+      "rationale": "Consecutive passive sentences remove all actors from the output and make prose impossible to follow. Each passive must be followed by an active construction.",
+      "example_correct": "The report was submitted on Thursday. The committee reviewed it the following morning.",
+      "example_incorrect": "The report was submitted on Thursday. It was reviewed the following morning. A decision was reached by Friday.",
+      "violation_type": "consecutive_passive_chain",
+      "source": "Strunk & White Rule 10 — avoid making one passive depend directly upon another"
+    },
+    {
+      "rule_id": "VR_06",
+      "rule": "Do not use passive to avoid naming the actor when the actor is known and relevant.",
+      "weight": "hard",
+      "rationale": "Evasive passive is a clarity violation. If the actor is known and their action matters, name them.",
+      "example_correct": "The contractor failed to file the permits on time.",
+      "example_incorrect": "The permits were not filed on time.",
+      "violation_type": "evasive_passive",
+      "source": "Strunk & White Rule 10"
+    },
+    {
+      "rule_id": "VR_07",
+      "rule": "Do not use there is or there are as a sentence opener when an active subject exists.",
+      "weight": "soft",
+      "rationale": "There is and there are delay the actor and weaken the verb. Replace with a direct active construction.",
+      "example_correct": "A risk exists at every checkpoint.",
+      "example_incorrect": "There is a risk at every checkpoint.",
+      "violation_type": "existential_opener",
+      "source": "Strunk & White Rule 10 — replace there is / could be heard with active verb"
+    },
+    {
+      "rule_id": "VR_08",
+      "rule": "Do not use it is or it was as a sentence opener when a direct subject exists.",
+      "weight": "soft",
+      "rationale": "It is and it was constructions delay meaning and inflate sentence length.",
+      "example_correct": "The decision took three weeks.",
+      "example_incorrect": "It took three weeks for the decision to be made.",
+      "violation_type": "dummy_subject_opener",
+      "source": "Strunk & White Rule 10 and Rule 13 — omit needless words"
+    }
+  ],
+  "passive_conditions_summary": {
+    "permitted": [
+      "Actor is unknown",
+      "Actor is irrelevant to the reader",
+      "Actor is deliberately withheld for legal or sensitive reasons"
+    ],
+    "not_permitted": [
+      "Actor is known and relevant",
+      "Two passive constructions in sequence",
+      "Passive used to avoid responsibility or accountability",
+      "Passive used for stylistic variety"
+    ]
+  }
+}

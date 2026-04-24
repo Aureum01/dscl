@@ -1,0 +1,191 @@
+{
+  "_citation": {
+    "sources": [
+      {
+        "name": "Strunk & White, Elements of Style — Rules 2, 3, 4, 5, 6",
+        "url": "https://www.gutenberg.org/ebooks/37134",
+        "note": "Public domain. Comma, semicolon, period rules grounded in Rules 2-6."
+      },
+      {
+        "name": "Purdue OWL — Grammar and Punctuation",
+        "url": "https://owl.purdue.edu/owl/general_writing/grammar/index.html",
+        "note": "Punctuation as structural tool, not decorative pause marker."
+      },
+      {
+        "name": "Plain Language Act 2010",
+        "url": "https://www.plainlanguage.gov",
+        "note": "Punctuation conventions for plain language public documents."
+      }
+    ]
+  },
+  "_description": "Each punctuation mark has a defined structural role. Punctuation is not decorative. It is not a pause marker. Every mark signals a specific relationship between the elements it separates or connects.",
+  "_pipeline_step": 9,
+  "_pipeline_substep": 3,
+  "marks": [
+    {
+      "mark": "period",
+      "symbol": ".",
+      "function": "Ends a complete thought. Creates emphasis. The strongest pause.",
+      "weight": "hard",
+      "rules": [
+        {
+          "rule_id": "PF_01",
+          "rule": "Use a period to end every complete sentence.",
+          "example_correct": "The road is closed.",
+          "example_incorrect": "The road is closed,",
+          "violation_type": "missing_period"
+        },
+        {
+          "rule_id": "PF_02",
+          "rule": "Do not use a period to break a sentence fragment away from its parent sentence.",
+          "example_correct": "He left quickly, taking nothing with him.",
+          "example_incorrect": "He left quickly. Taking nothing with him.",
+          "violation_type": "period_creating_fragment",
+          "source": "Strunk & White Rule 6"
+        },
+        {
+          "rule_id": "PF_03",
+          "rule": "A short sentence ended with a period creates emphasis. Use this deliberately.",
+          "example_correct": "The bridge is out. Do not cross.",
+          "note": "The period after a short declarative sentence is a tool for impact — not just a grammatical requirement."
+        }
+      ]
+    },
+    {
+      "mark": "comma",
+      "symbol": ",",
+      "function": "Separates actor from consequence. Separates list items. Sets off parenthetic expressions. Precedes coordinating conjunctions between independent clauses.",
+      "weight": "hard",
+      "rules": [
+        {
+          "rule_id": "PF_04",
+          "rule": "Use a comma in a series of three or more items — including before the final conjunction.",
+          "example_correct": "Bring your ID, your permit, and your vehicle registration.",
+          "example_incorrect": "Bring your ID, your permit and your vehicle registration.",
+          "violation_type": "missing_serial_comma",
+          "source": "Strunk & White Rule 2"
+        },
+        {
+          "rule_id": "PF_05",
+          "rule": "Use a comma before a coordinating conjunction joining two independent clauses.",
+          "example_correct": "The gate is locked, but the side entrance is open.",
+          "example_incorrect": "The gate is locked but the side entrance is open.",
+          "violation_type": "missing_comma_before_conjunction",
+          "source": "Strunk & White Rule 4"
+        },
+        {
+          "rule_id": "PF_06",
+          "rule": "Use commas on both sides of a parenthetic expression. Never one without the other.",
+          "example_correct": "The convoy, delayed by weather, arrived at 0800.",
+          "example_incorrect": "The convoy, delayed by weather arrived at 0800.",
+          "violation_type": "unbalanced_parenthetic_commas",
+          "source": "Strunk & White Rule 3"
+        },
+        {
+          "rule_id": "PF_07",
+          "rule": "Use a comma after an introductory clause or phrase.",
+          "example_correct": "After the flood, work resumed.",
+          "example_incorrect": "After the flood work resumed.",
+          "violation_type": "missing_comma_after_intro"
+        },
+        {
+          "rule_id": "PF_08",
+          "rule": "Do not use a comma to join two independent clauses without a conjunction — comma splice.",
+          "example_correct": "The road is closed. Expect delays.",
+          "example_incorrect": "The road is closed, expect delays.",
+          "violation_type": "comma_splice",
+          "source": "Strunk & White Rule 5"
+        }
+      ]
+    },
+    {
+      "mark": "semicolon",
+      "symbol": ";",
+      "function": "Joins two related independent clauses without a conjunction. Stronger than a comma. Weaker than a period.",
+      "weight": "hard",
+      "rules": [
+        {
+          "rule_id": "PF_09",
+          "rule": "Use a semicolon between two independent clauses that are closely related and have no conjunction.",
+          "example_correct": "The northern route is faster; the southern route is safer.",
+          "example_incorrect": "The northern route is faster, the southern route is safer.",
+          "violation_type": "comma_where_semicolon_required",
+          "source": "Strunk & White Rule 5"
+        },
+        {
+          "rule_id": "PF_10",
+          "rule": "Do not use a semicolon before a coordinating conjunction. Use a comma.",
+          "example_correct": "The road is open, but conditions are dangerous.",
+          "example_incorrect": "The road is open; but conditions are dangerous.",
+          "violation_type": "semicolon_before_conjunction",
+          "source": "Strunk & White Rule 5"
+        },
+        {
+          "rule_id": "PF_11",
+          "rule": "Use a semicolon between items in a series when the items themselves contain commas.",
+          "example_correct": "Teams are stationed in Beirut, Lebanon; Kabul, Afghanistan; and Nairobi, Kenya.",
+          "example_incorrect": "Teams are stationed in Beirut, Lebanon, Kabul, Afghanistan, and Nairobi, Kenya.",
+          "violation_type": "comma_series_with_internal_commas"
+        }
+      ]
+    },
+    {
+      "mark": "colon",
+      "symbol": ":",
+      "function": "Introduces what the preceding clause earns. The clause before the colon must be a complete independent clause. The colon points forward.",
+      "weight": "hard",
+      "rules": [
+        {
+          "rule_id": "PF_12",
+          "rule": "Use a colon to introduce a list, explanation, or quotation when the preceding clause is complete.",
+          "example_correct": "Three items are required: an ID, a permit, and a vehicle pass.",
+          "example_incorrect": "You will need: an ID, a permit, and a vehicle pass.",
+          "note": "You will need is not a complete independent clause. The colon is not justified here.",
+          "violation_type": "colon_after_incomplete_clause"
+        },
+        {
+          "rule_id": "PF_13",
+          "rule": "The colon must be earned by the clause before it. Do not use a colon after a verb or preposition.",
+          "example_correct": "The requirements are clear: all vehicles must be registered.",
+          "example_incorrect": "The requirements include: registration, insurance, and a permit.",
+          "violation_type": "colon_after_verb_or_preposition"
+        }
+      ]
+    },
+    {
+      "mark": "dash",
+      "symbol": "—",
+      "function": "Sets off a strong parenthetic break or amplifies what follows. More emphatic than commas. Use sparingly.",
+      "weight": "soft",
+      "rules": [
+        {
+          "rule_id": "PF_14",
+          "rule": "Use an em dash to set off a parenthetic expression that requires stronger emphasis than commas provide.",
+          "example_correct": "The only safe route — the coastal road — is now closed.",
+          "note": "Use commas for routine parenthetic expressions. Reserve dashes for high-emphasis breaks.",
+          "violation_type": "overused_dash"
+        },
+        {
+          "rule_id": "PF_15",
+          "rule": "Do not use a dash as a substitute for a comma, colon, or period.",
+          "example_incorrect": "We need three things — ID, permit, and a vehicle pass — before we can proceed — please bring them tomorrow.",
+          "violation_type": "dash_overuse"
+        }
+      ]
+    }
+  ],
+  "blocked_uses": [
+    {
+      "use": "Punctuation as a pause marker",
+      "note": "Punctuation signals grammatical and logical relationships — not breathing pauses. Do not insert commas where you would pause when speaking."
+    },
+    {
+      "use": "Punctuation as decoration",
+      "note": "Every mark must perform a structural function. A mark that does not separate, join, introduce, or emphasize is a violation."
+    },
+    {
+      "use": "Exclamation mark in formal output",
+      "note": "Exclamation marks are not permitted in any DSCL domain except direct speech in creative or journalistic contexts. Emphasis is created through sentence structure and word choice — not punctuation."
+    }
+  ]
+}

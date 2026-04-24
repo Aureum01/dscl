@@ -1,0 +1,324 @@
+{
+  "_meta": {
+    "file": "templates.json",
+    "version": "1.0.0",
+    "location": "dictionary/vocabulary/templates.json",
+    "description": "Report structure templates for DSCL output composition. Each template defines section order, section rules, sentence budgets, and variables the AI needs to produce consistent output.",
+    "note": "Templates are loaded on demand by section name. Custom templates go in dictionary/custom/templates/ and are merged at load time. User templates always win over defaults.",
+    "how_to_add": "Copy any template block, give it a new key, adjust structure and rules. The AI will read the template and follow it exactly. Variables marked required must be supplied by the caller."
+  },
+
+  "templates": {
+
+    "corporate_security_intel": {
+      "description": "FIS Corporate Security Intelligence — COMPASS report format. Bottom-up composition: Latest Developments first, then Business Analysis, then Executive Summary.",
+      "domain": "corporate_security_intel",
+      "composition_order": ["latest_developments", "business_analysis", "executive_summary"],
+      "render_order": ["executive_summary", "business_analysis", "latest_developments"],
+      "note": "Always compose bottom-up. Always render top-down. The summary is written last but appears first.",
+
+      "variables": {
+        "region": { "required": true, "description": "Geographic region or country being reported on." },
+        "topic": { "required": true, "description": "The event or situation being analyzed." },
+        "date": { "required": false, "description": "Report date. Include if provided." },
+        "classification": { "required": false, "default": "TLP:WHITE", "description": "Report classification label." }
+      },
+
+      "sections": {
+
+        "latest_developments": {
+          "order": 1,
+          "label": "Latest Developments",
+          "description": "Evidence layer. Sourced from open and trusted intelligence. Supports the business analysis.",
+          "structure": {
+            "bluf": {
+              "type": "sentence",
+              "count": 1,
+              "instruction": "One sentence. States the situation, the key development, and the risk or probability of impact. No hedging. No passive voice."
+            },
+            "bullets": {
+              "type": "bullet_list",
+              "min": 2,
+              "max": 3,
+              "instruction": "Ordered by importance. First bullet is the most critical evidence supporting the BLUF. Second and optional third continue to support and reinforce.",
+              "sub_bullets": {
+                "allowed": true,
+                "max_per_bullet": 1,
+                "instruction": "Sub-bullet adds context to the bullet above it. One sentence only."
+              }
+            }
+          },
+          "rules": {
+            "names": "flag_and_replace_with_title",
+            "sentence_max_words": 20,
+            "bullet_max_words": 25,
+            "include_dates": true,
+            "banned_phrases": ["it is worth noting", "it is important to note", "needless to say"],
+            "tone": "objective",
+            "bias": "remove_sensationalizing"
+          }
+        },
+
+        "business_analysis": {
+          "order": 2,
+          "label": "Business Analysis",
+          "description": "Implication layer. Connects the developments to operational impact. Written for executives to skim.",
+          "structure": {
+            "sentence_1": {
+              "role": "impact_scope",
+              "instruction": "State the operational or regional area of potential impact. One sentence."
+            },
+            "sentences_2_3": {
+              "role": "risk_and_probability",
+              "instruction": "Describe the risk or probability of impact and how it relates to operations. Two to three sentences. Pull directly from the developments as evidence."
+            },
+            "sentence_4": {
+              "role": "triggers",
+              "instruction": "Identify potential triggers that, if met, may affect operations, employee safety, or travel. One sentence."
+            }
+          },
+          "length": {
+            "min_sentences": 4,
+            "max_sentences": 5
+          },
+          "rules": {
+            "banned_phrases": ["business continuity", "fintech", "FIS"],
+            "replace_could_with_can": true,
+            "passive_voice": "flag",
+            "fk_target": { "min": 8, "max": 11 },
+            "sentence_max_words": 25,
+            "tone": "professional",
+            "register": "executive_skimmable",
+            "evidence_required": true,
+            "note": "Analysis must be derived from what is stated in the developments. Do not introduce new information."
+          }
+        },
+
+        "executive_summary": {
+          "order": 3,
+          "label": "Executive Summary",
+          "description": "Top-level overview. Written last, rendered first. Reader should be fully briefed from this section alone.",
+          "structure": {
+            "sentence_1": {
+              "role": "overview",
+              "instruction": "High-level overview of the topic. One sentence. Simple and traditional."
+            },
+            "sentences_2_3": {
+              "role": "key_judgments",
+              "instruction": "Key judgments from the developments addressing the risk of impact. One to two sentences."
+            },
+            "sentences_3_4": {
+              "role": "key_takeaways",
+              "instruction": "Key takeaways from the business analysis. One to two sentences."
+            }
+          },
+          "length": {
+            "min_sentences": 3,
+            "max_sentences": 4,
+            "extend_to": 5,
+            "extend_condition": "Only if explicitly instructed by the caller."
+          },
+          "rules": {
+            "no_new_information": true,
+            "source_sections": ["latest_developments", "business_analysis"],
+            "passive_voice": "flag",
+            "fk_target": { "min": 8, "max": 11 },
+            "sentence_max_words": 22,
+            "tone": "objective",
+            "priority_topic": "data_center_developments",
+            "priority_note": "Data center developments are Priority 1 and must be emphasized when present."
+          }
+        }
+      }
+    },
+
+    "travel_risk": {
+      "description": "Country risk assessment and travel advisory for business travelers. Plain sections, no classification headers, no metadata blocks, no risk rating tables.",
+      "domain": "travel_risk",
+      "composition_order": ["security_environment", "movement_advice", "laws_and_customs", "emergency_procedures"],
+      "render_order": ["security_environment", "movement_advice", "laws_and_customs", "emergency_procedures"],
+      "note": "No document headers, classification labels, audience tags, date stamps, or risk level badges unless explicitly provided as variables by the caller. Output starts directly with the first section label.",
+
+      "variables": {
+        "location": { "required": true, "description": "City or country being assessed." },
+        "traveler_context": { "required": false, "description": "Who the traveler is and their situation. e.g. business traveler, airport hotel, awaiting conference." },
+        "date": { "required": false, "description": "If provided, include at the top. If not provided, omit entirely." }
+      },
+
+      "sections": {
+
+        "security_environment": {
+          "order": 1,
+          "label": "Security Environment",
+          "description": "Current threat picture for the location. Factual, concise, no speculation.",
+          "structure": {
+            "sentence_1": {
+              "role": "overall_risk",
+              "instruction": "State the overall security risk level and why in one sentence."
+            },
+            "sentences_2_4": {
+              "role": "specific_threats",
+              "instruction": "Cover the specific threat types relevant to this location — crime, terrorism, civil unrest, surveillance. Two to three sentences. Only include threats that are actually relevant. Do not pad with generic filler."
+            },
+            "sentence_5": {
+              "role": "situational_awareness",
+              "instruction": "One practical sentence on what travelers should stay alert to."
+            }
+          },
+          "length": {
+            "min_sentences": 3,
+            "max_sentences": 5
+          },
+          "rules": {
+            "passive_voice": "flag",
+            "fk_target": { "min": 6, "max": 9 },
+            "sentence_max_words": 22,
+            "tone": "objective",
+            "banned_phrases": ["it is worth noting", "needless to say", "it goes without saying"],
+            "no_speculation": true
+          }
+        },
+
+        "movement_advice": {
+          "order": 2,
+          "label": "Movement Advice",
+          "description": "Practical guidance on getting between locations safely. Specific and actionable.",
+          "structure": {
+            "sentence_1": {
+              "role": "primary_route",
+              "instruction": "State the primary route or transport corridor and journey time."
+            },
+            "sentences_2_4": {
+              "role": "transport_options",
+              "instruction": "Recommended transport options in order of preference. Be specific — name the services, methods, or apps where relevant. Two to three sentences."
+            },
+            "sentence_5": {
+              "role": "timing",
+              "instruction": "One sentence on optimal travel timing and what to avoid."
+            },
+            "sentence_6": {
+              "role": "practical_tip",
+              "instruction": "One practical tip — e.g. save addresses in both languages, share itinerary with a colleague."
+            }
+          },
+          "length": {
+            "min_sentences": 4,
+            "max_sentences": 6
+          },
+          "rules": {
+            "passive_voice": "flag",
+            "fk_target": { "min": 6, "max": 9 },
+            "sentence_max_words": 22,
+            "tone": "direct",
+            "actionable": true
+          }
+        },
+
+        "laws_and_customs": {
+          "order": 3,
+          "label": "Local Laws and Customs",
+          "description": "Legal and cultural rules travelers must follow. State the rule, then the consequence if relevant. No moralizing.",
+          "structure": {
+            "framing_sentence": {
+              "role": "framing",
+              "instruction": "One sentence establishing that local law applies to all visitors without exception."
+            },
+            "rules_list": {
+              "role": "rules",
+              "type": "list",
+              "instruction": "Cover the rules that matter for this location. Each item states the rule plainly. Include the legal consequence where it is serious. Do not pad with obvious common sense. Cover: alcohol, dress, photography, speech and social media, any location-specific laws that carry real risk for business travelers."
+            }
+          },
+          "length": {
+            "min_sentences": 5,
+            "max_sentences": 8
+          },
+          "rules": {
+            "passive_voice": "allow",
+            "fk_target": { "min": 7, "max": 10 },
+            "sentence_max_words": 25,
+            "tone": "direct",
+            "no_moralizing": true,
+            "state_consequences": true
+          }
+        },
+
+        "emergency_procedures": {
+          "order": 4,
+          "label": "Emergency Procedures",
+          "description": "What to do and who to call. Numbers first, then actions. No filler.",
+          "structure": {
+            "numbers": {
+              "role": "emergency_numbers",
+              "type": "list",
+              "instruction": "List the relevant emergency numbers for this location. Police, ambulance, and embassy line as a minimum. Format as a short list."
+            },
+            "incident_action": {
+              "role": "if_incident_occurs",
+              "instruction": "Two to three sentences on immediate actions if an incident occurs — where to go, who to contact first, what not to do."
+            },
+            "detention": {
+              "role": "if_detained",
+              "instruction": "One to two sentences on what to do if detained. Request embassy notification. Do not sign documents before legal consultation."
+            },
+            "documentation": {
+              "role": "documentation",
+              "instruction": "One sentence on keeping copies of passport, visa, and insurance stored separately from originals."
+            }
+          },
+          "length": {
+            "min_sentences": 4,
+            "max_sentences": 7
+          },
+          "rules": {
+            "passive_voice": "flag",
+            "fk_target": { "min": 5, "max": 8 },
+            "sentence_max_words": 20,
+            "tone": "direct",
+            "numbers_required": true,
+            "no_new_information": false
+          }
+        }
+      }
+    },
+
+    "_template_blank": {
+      "description": "Blank starter template. Copy this block, rename the key, and fill in your structure.",
+      "domain": "your_domain_name",
+      "composition_order": ["section_1", "section_2", "section_3"],
+      "render_order": ["section_1", "section_2", "section_3"],
+
+      "variables": {
+        "variable_name": { "required": true, "description": "Describe what this variable holds." }
+      },
+
+      "sections": {
+        "section_1": {
+          "order": 1,
+          "label": "Section Label",
+          "description": "What this section does.",
+          "structure": {
+            "part_1": {
+              "role": "role_name",
+              "instruction": "What the AI should write here."
+            }
+          },
+          "length": {
+            "min_sentences": 1,
+            "max_sentences": 3
+          },
+          "rules": {
+            "fk_target": { "min": 6, "max": 10 },
+            "sentence_max_words": 25,
+            "passive_voice": "flag",
+            "tone": "professional"
+          }
+        }
+      }
+    }
+
+  },
+
+  "custom_template_path": "dictionary/custom/templates/",
+  "custom_template_note": "Drop any JSON file matching this schema into the custom path. DSCL will load it alongside defaults. Custom template keys override built-in keys of the same name."
+}

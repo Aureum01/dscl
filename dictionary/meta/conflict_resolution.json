@@ -1,0 +1,155 @@
+{
+  "_citation": {
+    "sources": [
+      {
+        "name": "Strunk & White, Elements of Style",
+        "url": "https://www.gutenberg.org/ebooks/37134",
+        "note": "Public domain. Implicit rule priority in Elements of Style — subject-verb proximity and active voice take precedence over stylistic preferences."
+      },
+      {
+        "name": "Plain Language Act 2010",
+        "url": "https://www.plainlanguage.gov",
+        "note": "Resolution defaults to simpler output when two rules conflict."
+      },
+      {
+        "name": "Williams, J. — Style: Lessons in Clarity and Grace",
+        "url": null,
+        "note": "Hierarchy of rules — syntax clarity ranked above grammar preferences, grammar preferences ranked above vocabulary choices."
+      }
+    ]
+  },
+  "_description": "When two rules produce incompatible outputs, this file defines which wins. Five-level priority hierarchy. Tiebreaker: shorter sentence. This file is consulted at pipeline step 12, after grammar, syntax, and readability rules have all been applied.",
+  "_pipeline_step": 12,
+  "_rule": "When a conflict is detected between two rules, find both rules in the hierarchy below. The rule at the higher level wins. If both rules are at the same level, apply the tiebreaker.",
+
+  "hierarchy": [
+    {
+      "level": 1,
+      "name": "syntax — subject-verb proximity",
+      "description": "Reader comprehension depends on subject-verb proximity before all else. If any rule at a lower level breaks subject-verb proximity, it loses. Syntax wins.",
+      "files": [
+        "/syntax/sentence_structure.json — SS_01, SS_02",
+        "/syntax/clause_rules.json — CL_01",
+        "/grammar/verb_placement.json — VP_01, VP_02"
+      ],
+      "rationale": "A reader who cannot identify the subject and verb of a sentence cannot process any other information in it. No other rule is more foundational.",
+      "example_conflict": "A vocabulary choice requires a long noun phrase that separates subject from verb by 8 words. Syntax rule VP_01 caps the gap at 5 words. VP_01 wins — rewrite the noun phrase.",
+      "overrides": "all lower levels"
+    },
+    {
+      "level": 2,
+      "name": "grammar — active voice",
+      "description": "Active voice is the default. Passive is permitted only under specific conditions defined in voice_rules.json. If a vocabulary choice or readability correction produces a passive construction not covered by those conditions, the active voice rule wins.",
+      "files": [
+        "/grammar/voice_rules.json — VR_01 through VR_08"
+      ],
+      "rationale": "Active voice keeps the actor visible and the sentence direct. It resolves most nominalization and passive chain conflicts automatically — once the actor is named, the sentence structure follows.",
+      "example_conflict": "A readability correction shortens a sentence by converting it to passive. VR_01 requires active voice and the actor is known. VR_01 wins — find a different way to shorten the sentence.",
+      "overrides": "levels 3, 4, 5"
+    },
+    {
+      "level": 3,
+      "name": "vocabulary — primary over fallback",
+      "description": "Simple word attempted first. Fallback only if primary cannot carry the precise meaning. Domain exception only if domain tag matches and no simpler word exists.",
+      "files": [
+        "/vocabulary/primary_vocab.json",
+        "/vocabulary/fallback_vocab.json",
+        "/vocabulary/domain_exceptions.json"
+      ],
+      "rationale": "A simpler word that carries the same meaning is always preferred. Complexity in vocabulary is only justified when precision requires it.",
+      "example_conflict": "A fallback word is more precise in a given context but a primary word exists that carries most of the meaning. Primary word wins unless the meaning loss is material to the narrative.",
+      "overrides": "levels 4, 5"
+    },
+    {
+      "level": 4,
+      "name": "readability — grade target",
+      "description": "If output exceeds the FK ceiling for the domain, reduce sentence length before changing word choice. Sentence splitting is the first correction — not vocabulary replacement.",
+      "files": [
+        "/readability/grade_targets.json",
+        "/readability/sentence_length.json",
+        "/readability/syllable_load.json"
+      ],
+      "rationale": "Sentence length has a larger coefficient in the FK formula than syllable count. Splitting sentences is more efficient than replacing words and is less likely to cause meaning loss.",
+      "correction_order": [
+        "1. Split sentences that exceed the average or hard ceiling",
+        "2. Replace 3+ syllable words with 1-2 syllable equivalents where meaning is preserved",
+        "3. Remove nominalizations",
+        "4. Remove intensifiers and filler adjectives",
+        "5. If FK is still above ceiling, review domain assignment — target may be wrong"
+      ],
+      "example_conflict": "A sentence uses a precise 4-syllable domain term. Syllable rule SY_03 flags it. Domain exceptions check shows it is permitted. Domain exception wins over syllable rule — level 5 overrides level 4 in this specific case.",
+      "note": "Domain exceptions override readability rules only when the domain tag matches and no simpler word exists. This is the only upward override in the hierarchy.",
+      "overrides": "level 5 in normal cases. Exception: domain_exceptions.json overrides readability when domain tag matches."
+    },
+    {
+      "level": 5,
+      "name": "domain exceptions — precision override",
+      "description": "A domain exception word overrides lower-priority rules only when no simpler word carries the same enforceable or technical meaning AND the domain tag matches.",
+      "files": [
+        "/vocabulary/domain_exceptions.json"
+      ],
+      "rationale": "Some words have no plain language equivalent in their domain context. A legal term of art, a medical procedure name, or a technical specification term must be used precisely. When this is the case, readability rules yield.",
+      "conditions_for_override": [
+        "1. The word is listed in domain_exceptions.json",
+        "2. The active domain tag matches the entry's domain field",
+        "3. No simpler word carries the same precise meaning",
+        "4. The entry's no_simpler_equivalent_because field is populated"
+      ],
+      "example_conflict": "Output contains liability in a legal_contract domain document. Syllable rule flags it at 4 syllables. domain_exceptions.json has an entry for liability with domain: legal_contract and justification that responsibility does not carry enforceable weight. Domain exception wins — liability stays.",
+      "overrides": "readability rules only, when all four conditions above are met"
+    }
+  ],
+
+  "tiebreaker": {
+    "rule": "When two rules are at the same priority level and produce incompatible outputs, the shorter sentence wins.",
+    "rationale": "Shorter sentences are more readable, more direct, and carry less risk of violating the FK ceiling. When no other rule resolves the conflict, brevity is the default.",
+    "application": "Compare the word count of the two candidate outputs. Use the shorter one.",
+    "source": "Plain Language Act 2010 — resolution defaults to simpler output"
+  },
+
+  "special_cases": [
+    {
+      "case": "AI signature word vs domain exception",
+      "resolution": "AI signature word always loses. AI signature words are blocked at the syllable_load layer before domain exceptions are checked. No AI signature word can appear in output regardless of domain.",
+      "source": "/readability/syllable_load.json — ai_signature_blocklist"
+    },
+    {
+      "case": "Hard rule vs hard rule",
+      "resolution": "Apply the five-level hierarchy. The rule at the higher level wins. If both rules are at the same level and are both hard, escalate to tiebreaker. If tiebreaker does not resolve, rewrite the sentence from scratch.",
+      "source": "/meta/weight_definitions.json"
+    },
+    {
+      "case": "Soft rule vs hard rule",
+      "resolution": "Hard rule always wins regardless of hierarchy level. A soft rule cannot override a hard rule.",
+      "source": "/meta/weight_definitions.json"
+    },
+    {
+      "case": "Contextual rule vs soft rule",
+      "resolution": "If the domain tag is active, the contextual rule applies at its stated weight. If the domain tag is not active, treat the contextual rule as soft.",
+      "source": "/meta/weight_definitions.json"
+    },
+    {
+      "case": "Two passive constructions in sequence",
+      "resolution": "VR_05 is a hard rule. The second passive construction must be rewritten as active regardless of any other rule. No tiebreaker applies — rewrite is mandatory.",
+      "source": "/grammar/voice_rules.json — VR_05"
+    },
+    {
+      "case": "FK grade above ceiling after all corrections",
+      "resolution": "If all correction steps in the readability correction order have been applied and FK is still above the ceiling, review the domain assignment. The domain may be wrong. If the domain is confirmed correct, the FK ceiling may need to be raised — consult domain_register.json.",
+      "source": "/readability/grade_targets.json — correction_order"
+    }
+  ],
+
+  "conflict_log": {
+    "description": "When a soft rule exception is permitted by this file, the pipeline should log the exception class for review.",
+    "fields": [
+      "rule_id_overridden",
+      "rule_id_that_won",
+      "hierarchy_level_of_winner",
+      "exception_class",
+      "sentence_before",
+      "sentence_after"
+    ],
+    "note": "Hard rule violations are never logged as exceptions — they are rewritten until compliant. Only soft rule overrides are logged."
+  }
+}
